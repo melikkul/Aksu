@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import torch
 
-from kokturk.models.char_gru import BahdanauAttention, MorphAtomizer
+from aksu.kokturk.models.char_gru import BahdanauAttention, MorphAtomizer
 
 
 class TestBahdanauAttention:

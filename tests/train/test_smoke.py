@@ -5,8 +5,8 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from kokturk.models.char_gru import MorphAtomizer
-from train.datasets import EOS_IDX, PAD_IDX, SOS_IDX, Vocab
+from aksu.kokturk.models.char_gru import MorphAtomizer
+from aksu.train.datasets import EOS_IDX, PAD_IDX, SOS_IDX, Vocab
 
 
 class TestTrainingPipeline:

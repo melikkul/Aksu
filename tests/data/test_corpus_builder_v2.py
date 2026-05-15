@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.corpus_builder import POS_THRESHOLDS, CorpusBuilder, _extract_pos
+from aksu.data.corpus_builder import POS_THRESHOLDS, CorpusBuilder, _extract_pos
 
 
 class TestExtractPos:

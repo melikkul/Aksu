@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from kokturk.core.analyzer import MorphoAnalyzer
+from aksu.kokturk.core.analyzer import MorphoAnalyzer
 
 GOLDEN_PATH = Path(__file__).parent / "golden_test_set.json"
 

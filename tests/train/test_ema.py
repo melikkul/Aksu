@@ -4,7 +4,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from train.ema import EMAWeights
+from aksu.train.ema import EMAWeights
 
 
 def _make_model() -> nn.Module:

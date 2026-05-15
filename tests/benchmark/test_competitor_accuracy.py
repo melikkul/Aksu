@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from benchmark.competitor_accuracy import (
+from aksu.benchmark.competitor_accuracy import (
     CompetitorResult,
     _compare_tags,
     convert_ud_feats_to_canonical,
@@ -17,7 +17,7 @@ from benchmark.competitor_accuracy import (
     generate_positioning_summary,
     run_competitor_benchmark,
 )
-from benchmark.standard_benchmarks import ud_to_canonical
+from aksu.benchmark.standard_benchmarks import ud_to_canonical
 
 
 def test_convert_delegates_to_ud_to_canonical():
@@ -125,9 +125,9 @@ def test_run_benchmark_writes_table(tmp_path):
     ]
     out = tmp_path / "report.md"
     with (
-        patch("benchmark.competitor_accuracy.evaluate_stanza", return_value=mock_result),
-        patch("benchmark.competitor_accuracy.evaluate_spacy", return_value=None),
-        patch("benchmark.competitor_accuracy.evaluate_udpipe", return_value=None),
+        patch("aksu.benchmark.competitor_accuracy.evaluate_stanza", return_value=mock_result),
+        patch("aksu.benchmark.competitor_accuracy.evaluate_spacy", return_value=None),
+        patch("aksu.benchmark.competitor_accuracy.evaluate_udpipe", return_value=None),
     ):
         results = run_competitor_benchmark(test_data, out, our_em=84.45)
     assert len(results) == 1

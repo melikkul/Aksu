@@ -1,0 +1,8 @@
+{
+  "claim": "A2: DualHeadAtomizer generation EM 84.7%",
+  "checkpoint_search": "find models/ -name '*.pt' | grep -v berturk | grep -v disambiguator",
+  "checkpoints_found": ["models/punctuation/best_model.pt"],
+  "dual_head_checkpoint": null,
+  "verdict_A2": "UNVERIFIABLE — No DualHeadAtomizer checkpoint exists in the repo. models/v6/ contains only BERTurkDisambiguator seeds; no dual_head/ directory. Retraining would require 1-3 hours on TRUBA GPU (H100), outside audit scope without user approval.",
+  "verdict_C4": "UNVERIFIABLE — Dual-Head throughput benchmark impossible without checkpoint."
+}

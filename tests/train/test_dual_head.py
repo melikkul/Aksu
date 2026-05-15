@@ -6,7 +6,7 @@ import torch
 import torch.nn.functional as F
 import pytest
 
-from kokturk.models.dual_head import (
+from aksu.kokturk.models.dual_head import (
     AttentionPooling,
     DualHeadAtomizer,
     RootHead,

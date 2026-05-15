@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from benchmark.minimal_pairs import (
+from aksu.benchmark.minimal_pairs import (
     Pair,
     evaluate_minimal_pairs,
     load_pairs,

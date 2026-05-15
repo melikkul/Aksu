@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import pytest
 
-from train.curriculum import TAAC, GOLD, SILVER_AUTO, SILVER_AGREED
+from aksu.train.curriculum import TAAC, GOLD, SILVER_AUTO, SILVER_AGREED
 
 
 # ---------------------------------------------------------------------------
@@ -244,28 +244,28 @@ class TestAllowedTiersPerPhase:
         info = taac.step(999.0)  # No transition (large prev_loss not set yet)
         assert taac.current_phase in ("gold_only", "gold_and_silver_auto")
         # Check mapping directly
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         assert get_allowed_tiers("gold_only") == {GOLD}
 
     def test_gold_and_silver_auto_tiers(self):
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         assert get_allowed_tiers("gold_and_silver_auto") == {GOLD, SILVER_AUTO}
 
     def test_all_tiers(self):
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         assert get_allowed_tiers("all_tiers") == {GOLD, SILVER_AUTO, SILVER_AGREED}
 
     def test_gold_calibration_same_as_gold_only(self):
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         assert get_allowed_tiers("gold_calibration") == {GOLD}
 
     def test_all_final_same_as_all_tiers(self):
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         assert get_allowed_tiers("all_final") == {GOLD, SILVER_AUTO, SILVER_AGREED}
 
     def test_taac_phases_list_coverage(self):
         """Every phase in TAAC.PHASES must be in _PHASE_TIERS."""
-        from train.curriculum import get_allowed_tiers
+        from aksu.train.curriculum import get_allowed_tiers
         for phase in TAAC.PHASES:
             tiers = get_allowed_tiers(phase)
             assert isinstance(tiers, set) and len(tiers) > 0, (

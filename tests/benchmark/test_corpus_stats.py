@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from benchmark.corpus_stats import CorpusStats, compute_corpus_stats, recommend_cache_size
+from aksu.benchmark.corpus_stats import CorpusStats, compute_corpus_stats, recommend_cache_size
 
 
 def _write_corpus(tmp_path, words: list[str]) -> str:

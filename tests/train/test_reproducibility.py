@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import torch
 
-from train.reproducibility import capture_environment, seed_everything, worker_init_fn
+from aksu.train.reproducibility import capture_environment, seed_everything, worker_init_fn
 
 
 class TestSeedEverything:

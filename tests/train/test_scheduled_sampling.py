@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from train.curriculum import scheduled_sampling_ratio
+from aksu.train.curriculum import scheduled_sampling_ratio
 
 
 class TestScheduledSampling:

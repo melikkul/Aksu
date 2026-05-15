@@ -5,7 +5,7 @@ from __future__ import annotations
 import torch
 import pytest
 
-from train.bucket_batching import (
+from aksu.train.bucket_batching import (
     BucketBatchSampler,
     analyze_batching_efficiency,
     compute_pad_fraction,

@@ -1,7 +1,7 @@
 """Tests for training efficiency metrics."""
 from __future__ import annotations
 
-from benchmark.training_efficiency import (
+from aksu.benchmark.training_efficiency import (
     area_under_learning_curve,
     compute_all_efficiency_metrics,
     format_efficiency_table,

@@ -4,8 +4,8 @@ from __future__ import annotations
 import torch
 import torch.nn.functional as F
 
-from train.losses import FocalLoss, LabelSmoothingCE
-from train.rdrop import compute_rdrop_loss, symmetric_kl
+from aksu.train.losses import FocalLoss, LabelSmoothingCE
+from aksu.train.rdrop import compute_rdrop_loss, symmetric_kl
 
 
 def _ce_none(logits, targets, ignore_index=0):

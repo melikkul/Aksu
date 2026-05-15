@@ -1,0 +1,5 @@
+Loading BERTurk...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 8435.58it/s]
+2026-05-15 23:36:34,174 INFO: DisambiguationDataset: 7144 tokens (996 skipped Unk), 5225 unambiguous (73.1%), 1919 ambiguous
+2026-05-15 23:36:34,175 INFO:   Gold in Zeyrek: 7093 (99.3%), Gold added: 51 (0.7%)
+2026-05-15 23:36:34,175 INFO: Pre-caching BERTurk embeddings for 7144 samples...

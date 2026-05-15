@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from benchmark.significance import holm_bonferroni_correction, paired_bootstrap_test
+from aksu.benchmark.significance import holm_bonferroni_correction, paired_bootstrap_test
 
 
 class TestPairedBootstrap:
@@ -52,7 +52,7 @@ class TestHolmBonferroni:
 
 
 def test_multi_system_significance_report(tmp_path):
-    from benchmark.significance import multi_system_significance_report
+    from aksu.benchmark.significance import multi_system_significance_report
 
     labels = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     sys_a = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import torch
 
-from kokturk.core.constants import ZEYREK_TO_CANONICAL
-from kokturk.models.morphotactic_mask import (
+from aksu.kokturk.core.constants import ZEYREK_TO_CANONICAL
+from aksu.kokturk.models.morphotactic_mask import (
     TAG_TO_CATEGORY,
     MorphotacticMask,
     MorphState,

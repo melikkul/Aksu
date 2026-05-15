@@ -20,10 +20,10 @@ from torch.utils.data import DataLoader
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from kokturk.models.char_gru import MorphAtomizer  # noqa: E402
-from kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer  # noqa: E402
-from kokturk.models.dual_head import DualHeadAtomizer  # noqa: E402
-from train.datasets import (  # noqa: E402
+from aksu.kokturk.models.char_gru import MorphAtomizer  # noqa: E402
+from aksu.kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer  # noqa: E402
+from aksu.kokturk.models.dual_head import DualHeadAtomizer  # noqa: E402
+from aksu.train.datasets import (  # noqa: E402
     EOS_IDX,
     ContextualTieredDataset,
     TieredCorpusDataset,
@@ -72,19 +72,19 @@ def _build_model(args: dict, char_vocab_size: int, tag_vocab_size: int,
     context_type = args.get("context_type", "word2vec")
     context_dropout = args.get("context_dropout", 0.3)
     if context_type == "word2vec":
-        from kokturk.models.context_encoder import Word2VecContext
+        from aksu.kokturk.models.context_encoder import Word2VecContext
         ctx = Word2VecContext(
             vocab_size=word_vocab_size, embed_dim=embed_dim,
             gru_hidden_dim=hidden_dim // 2,
         )
     elif context_type == "bigru":
-        from kokturk.models.context_encoder import SentenceBiGRUContext
+        from aksu.kokturk.models.context_encoder import SentenceBiGRUContext
         ctx = SentenceBiGRUContext(
             vocab_size=word_vocab_size, embed_dim=embed_dim * 2,
             hidden_dim=hidden_dim // 2, dropout=dropout,
         )
     elif context_type == "berturk":
-        from kokturk.models.context_encoder import BERTurkContext
+        from aksu.kokturk.models.context_encoder import BERTurkContext
         bert_path = args.get("berturk_path") or "models/berturk"
         ctx = BERTurkContext(bert_path=str(bert_path), context_dim=hidden_dim)
     else:

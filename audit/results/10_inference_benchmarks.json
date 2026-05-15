@@ -1,0 +1,33 @@
+{
+  "login_node_constraint": "ulimit -t 300 (CPU seconds). PyTorch loading + torch ops exhaust the 300s CPU time budget. Only pure-Python Zeyrek benchmarks completed.",
+  "C1_zeyrek": {
+    "claim": "~6380 tok/s, ~50 MB",
+    "measured_throughput_cold_cache": 1959,
+    "measured_throughput_warm_cache": 2215478,
+    "measured_memory_delta_mb": 237.3,
+    "measurement_notes": "Cold-cache = each of 957 unique val sentences analyzed exactly once. Warm-cache = 200 unique sentences repeated, inflated by Zeyrek internal caching.",
+    "verdict_throughput": "REFUTED — cold-cache 1,959 tok/s is 0.31x of claimed 6,380 tok/s (3.3x slower). Ratio outside ±50% band.",
+    "verdict_memory": "REFUTED — MorphoAnalyzer+Zeyrek uses 237 MB load delta vs claimed ~50 MB. Note: measurement includes Python process overhead, not just Zeyrek data structures.",
+    "caveat": "Login node vs TRUBA compute node may differ; claimed measurement context not documented."
+  },
+  "C2_berturk_cached": {
+    "claim": "~3200 sent/s, ~1.5 GB",
+    "verdict": "UNVERIFIABLE — CPU time limit (SIGXCPU) kills process during BERTurk weight loading.",
+    "partial_evidence": {
+      "model_disk_size_mb": 422,
+      "params_approx_M": 110,
+      "fp32_weights_mb": 440,
+      "note": "1.5 GB claim likely includes activation tensors + BERT cache (7144×768×4 = 22 MB) + overhead. Model weights alone ~440 MB. 1.5 GB implausible for inference-only; may include training optimizer state."
+    }
+  },
+  "C3_reranker": {
+    "claim": "~50000 tok/s, ~10 MB",
+    "reranker_model_memory_delta_mb": 9.3,
+    "verdict": "PARTIALLY CONFIRMED for memory (9.3 MB matches claimed ~10 MB). Throughput UNVERIFIABLE — PyTorch startup exhausts CPU time before measurement window.",
+    "partial_evidence": "Reranker checkpoint loads as 9.3 MB (1,043,905 params × ~4 bytes = ~4 MB theoretical; 9.3 MB measured includes Python object overhead)."
+  },
+  "C4_dual_head": {
+    "claim": "~2000 tok/s, ~20 MB",
+    "verdict": "UNVERIFIABLE — No DualHead checkpoint exists (see Phase 8)."
+  }
+}

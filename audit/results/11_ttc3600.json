@@ -1,0 +1,18 @@
+{
+  "claim_group": "A3 (0.947 F1), A4 (deltas table), A5 (atomization improves every classifier), E1 (3600 docs / 6 categories / 5-fold stratified CV), E4 (bootstrap + Holm-Bonferroni applied)",
+  "data_status": "UNAVAILABLE",
+  "reason": "TTC-3600 dataset not present in checkout (data/external/ empty). Network access blocked on login node (wget exit 8, HuggingFace Hub connection failed). Dataset requires manual download from Kaggle or GitHub.",
+  "e4a_predetermined": "REFUTED — run_all_benchmarks.py does not import benchmark.significance. The README's claim 'All differences tested via paired bootstrap (10K iterations, Holm-Bonferroni corrected)' is FALSE at code level, regardless of dataset availability. See significance.py vs run_all_benchmarks.py import audit.",
+  "e2_e3_code": "CONFIRMED — src/benchmark/significance.py contains paired_bootstrap_test(n_bootstrap=10000) and holm_bonferroni_correction; tests pass (pytest).",
+  "verdict_A3": "UNVERIFIABLE — TTC-3600 not downloadable on this host. Code exists at src/benchmark/run_all_benchmarks.py and src/classify/.",
+  "verdict_A4": "UNVERIFIABLE — same blocker.",
+  "verdict_A5": "UNVERIFIABLE — same blocker.",
+  "verdict_E1": "UNVERIFIABLE for live run. Code inspection: run_all_benchmarks.py:154 uses StratifiedKFold(n_splits=5, shuffle=True, random_state=42) — CONFIRMED at code level.",
+  "verdict_E4a": "REFUTED — see above.",
+  "verdict_E4b": "UNVERIFIABLE — no fold predictions to bootstrap over.",
+  "code_review_findings": {
+    "run_all_benchmarks_imports": "grep -n import src/benchmark/run_all_benchmarks.py — no import of significance module",
+    "significance_tests": "937 passed, 0 failed in pytest for significance module",
+    "expected_categories": ["ekonomi", "kültür-sanat", "sağlık", "siyaset", "spor", "teknoloji"]
+  }
+}

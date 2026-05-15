@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
-from kokturk.core.output_formats import OutputFormatter
+from aksu.kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
+from aksu.kokturk.core.output_formats import OutputFormatter
 
 
 def _make_analyses(surface: str = "evlerinden") -> TokenAnalyses:

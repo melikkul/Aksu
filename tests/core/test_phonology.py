@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from kokturk.core.phonology import is_back, is_front, is_rounded, last_vowel
+from aksu.kokturk.core.phonology import is_back, is_front, is_rounded, last_vowel
 
 
 class TestLastVowel:

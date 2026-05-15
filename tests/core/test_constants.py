@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from kokturk.core.constants import (
+from aksu.kokturk.core.constants import (
     TRMORPH_TO_CANONICAL,
     UNMARKED_FEATURES,
     ZEYREK_TO_CANONICAL,

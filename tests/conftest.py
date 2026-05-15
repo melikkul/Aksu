@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from kokturk.core.analyzer import MorphoAnalyzer
-from kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
+from aksu.kokturk.core.analyzer import MorphoAnalyzer
+from aksu.kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
 
 
 @pytest.fixture

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from annotation.merge_annotations import merge_annotations
+from aksu.annotation.merge_annotations import merge_annotations
 
 
 class TestMerge:

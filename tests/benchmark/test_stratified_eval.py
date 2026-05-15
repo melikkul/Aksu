@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from benchmark.balanced_test_set import build_balanced_subset, load_balanced_indices
-from benchmark.stratified_eval import (
+from aksu.benchmark.balanced_test_set import build_balanced_subset, load_balanced_indices
+from aksu.benchmark.stratified_eval import (
     build_report,
     exact_match_score,
     format_report_markdown,

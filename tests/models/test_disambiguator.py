@@ -11,7 +11,7 @@ from unittest.mock import MagicMock
 import torch
 import pytest
 
-from kokturk.models.disambiguator import BERTurkDisambiguator, CandidateEncoder
+from aksu.kokturk.models.disambiguator import BERTurkDisambiguator, CandidateEncoder
 
 B = 4  # batch size for tests
 K = 10  # max candidates
@@ -270,7 +270,7 @@ class TestTraining:
 class TestGoldMatching:
     def test_to_str_format_matches_gold(self):
         """MorphologicalAnalysis.to_str() produces the same format as gold labels."""
-        from kokturk.core.datatypes import MorphologicalAnalysis
+        from aksu.kokturk.core.datatypes import MorphologicalAnalysis
 
         # Simulate what Zeyrek produces after ZEYREK_TO_CANONICAL mapping
         analysis = MorphologicalAnalysis(
@@ -287,7 +287,7 @@ class TestGoldMatching:
 
     def test_root_only_format(self):
         """Root with single POS tag matches gold format."""
-        from kokturk.core.datatypes import MorphologicalAnalysis
+        from aksu.kokturk.core.datatypes import MorphologicalAnalysis
 
         analysis = MorphologicalAnalysis(
             surface="bir",

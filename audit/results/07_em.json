@@ -1,0 +1,49 @@
+{
+  "evaluation_status": "STORED_RESULTS_ONLY",
+  "reason": "CPU time limit (ulimit -t 300s) on login node arf-ui1 terminates BERTurk forward pass (SIGXCPU, exit 152). Live re-evaluation requires a SLURM compute job. Stored results from training runs used instead.",
+  "source_files": {
+    "seed_42": "models/v6/disambiguator/test_results.json",
+    "ensemble": "models/v6/ensemble_results.json"
+  },
+  "seed_42": {
+    "test": {"overall_em_repo_def": 0.9821, "ambiguous_em": 0.9334, "total_tokens": 7144, "ambiguous_tokens": 1921},
+    "val": {"overall_em_repo_def": 0.9835, "ambiguous_em": 0.9403, "total_tokens": 6930, "ambiguous_tokens": 1909},
+    "trainable_params": 1043905,
+    "best_epoch": 17,
+    "checkpoint": "models/v6/disambiguator/best_model.pt"
+  },
+  "individual_seeds_from_ensemble_json": {
+    "42":   {"overall_em": 0.9821, "ambiguous_em": 0.9336},
+    "123":  {"overall_em": 0.9817, "ambiguous_em": 0.9320},
+    "456":  {"overall_em": 0.9798, "ambiguous_em": 0.9253},
+    "789":  {"overall_em": 0.9828, "ambiguous_em": 0.9362},
+    "1337": {"overall_em": 0.9810, "ambiguous_em": 0.9294}
+  },
+  "ensemble": {
+    "overall_em": 0.9832,
+    "ambiguous_em": 0.9377,
+    "num_models": 5
+  },
+  "ensemble_mask": {
+    "overall_em": 0.9672,
+    "ambiguous_em": 0.8786,
+    "morphotactic_fixes": 151
+  },
+  "seed_statistics": {
+    "n_seeds": 5,
+    "test_em_min": 0.9798,
+    "test_em_max": 0.9828,
+    "test_em_mean": 0.98148,
+    "test_em_median": 0.9817,
+    "test_em_stdev": 0.00114,
+    "ensemble_vs_median_gap_pp": 0.15
+  },
+  "readme_claim": "98.3%",
+  "verdict_A1": "PARTIALLY CONFIRMED — stored ensemble EM 98.32% matches README 98.3% (within 0.02pp). TLF-1 caveat: EM is candidate-index argmax accuracy (not full-parse string equality). TLF-2 caveat: headline is 5-seed ensemble; single-seed range 97.98-98.28%. Live re-verification blocked by login node CPU time limit.",
+  "em_definition_audit": {
+    "repo_definition": "argmax(preds == gold_indices) / total — candidate INDEX equality (train_disambiguator.py:253-272)",
+    "readme_implies": "full-parse string equality (standard in NLP papers)",
+    "tlf1_status": "CANNOT_VERIFY_LIVE_DUE_TO_CPU_LIMIT",
+    "code_confirmed": "The evaluate() function at train_disambiguator.py:253-272 uses gold_indices (position in Zeyrek candidate list), NOT gold label strings"
+  }
+}

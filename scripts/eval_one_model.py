@@ -20,7 +20,7 @@ from pathlib import Path
 
 import torch
 
-from train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX
+from aksu.train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX
 
 PROJECT = Path(__file__).resolve().parent.parent
 TEST_PATH = PROJECT / "data" / "splits" / "test.jsonl"
@@ -80,27 +80,27 @@ def infer_sizes(sd, mc):
 
 def build_model(mc, info):
     if mc == "seq2seq":
-        from kokturk.models.char_gru import MorphAtomizer
+        from aksu.kokturk.models.char_gru import MorphAtomizer
         return MorphAtomizer(
             char_vocab_size=info["char_vocab_size"], tag_vocab_size=info["tag_vocab_size"],
             embed_dim=info["embed_dim"], hidden_dim=info["hidden_dim"],
             num_layers=info["num_layers"], max_decode_len=MAX_TAG_LEN)
     elif mc == "dual_head":
-        from kokturk.models.dual_head import DualHeadAtomizer
+        from aksu.kokturk.models.dual_head import DualHeadAtomizer
         return DualHeadAtomizer(
             char_vocab_size=info["char_vocab_size"], tag_vocab_size=info["tag_vocab_size"],
             root_vocab_size=info["root_vocab_size"], embed_dim=info["embed_dim"],
             hidden_dim=info["hidden_dim"], num_layers=info["num_layers"],
             max_decode_len=MAX_TAG_LEN)
     elif mc == "contextual_dual_head":
-        from kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
+        from aksu.kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
         ct = info.get("context_type", "word2vec")
         if ct == "word2vec":
-            from kokturk.models.context_encoder import Word2VecContext
+            from aksu.kokturk.models.context_encoder import Word2VecContext
             ctx_enc = Word2VecContext(vocab_size=info["ctx_vocab_size"],
                 embed_dim=info["ctx_embed_dim"], gru_hidden_dim=info["ctx_gru_hidden"])
         elif ct == "sentence_bigru":
-            from kokturk.models.context_encoder import SentenceBiGRUContext
+            from aksu.kokturk.models.context_encoder import SentenceBiGRUContext
             ctx_enc = SentenceBiGRUContext(vocab_size=info["ctx_vocab_size"],
                 embed_dim=info["ctx_embed_dim"], hidden_dim=info["ctx_gru_hidden"])
         elif ct == "berturk":
@@ -110,10 +110,10 @@ def build_model(mc, info):
             for p in bm.parameters():
                 p.requires_grad = False
             tok = AutoTokenizer.from_pretrained(bp)
-            from kokturk.models.context_encoder import BERTurkContext
+            from aksu.kokturk.models.context_encoder import BERTurkContext
             ctx_enc = BERTurkContext(context_dim=info["ctx_context_dim"], bert_model=bm, tokenizer=tok)
         else:
-            from kokturk.models.context_encoder import Word2VecContext
+            from aksu.kokturk.models.context_encoder import Word2VecContext
             ctx_enc = Word2VecContext(vocab_size=5982, embed_dim=128, gru_hidden_dim=64)
         return ContextualDualHeadAtomizer(
             context_encoder=ctx_enc,

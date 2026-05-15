@@ -1,0 +1,14 @@
+{
+  "claim": "B1: 14 minutes CPU training (no GPU required)",
+  "live_verification": "BLOCKED",
+  "reason": "Login node arf-ui1 enforces ulimit -t 300s (CPU time). BERTurk forward passes during training exceed this within seconds. Full training requires a SLURM compute job submission.",
+  "stored_evidence": {
+    "STATUS.md:489": "Training COMPLETED: CPU job 5506392 on orfoz243, 14 min 40 sec",
+    "STATUS.md:23": "Training: 14 minutes on CPU (Orfoz), 30 epochs, batch_size=128, AdamW lr=1e-3",
+    "config_json": {"lr": 0.001, "epochs": 30, "batch_size": 128, "seed": 42}
+  },
+  "hardware_disclosure": "STATUS.md discloses 'orfoz243' which is TRUBA Orfoz cluster (112-core Intel Xeon, no GPU). Audit host arf-ui1 is same cluster family. Hardware match: YES.",
+  "documentation_gap": "README states '14 minutes on a standard CPU' without disclosing the CPU model. STATUS.md does disclose Orfoz hardware.",
+  "verdict_B1": "UNVERIFIABLE_LIVE — Cannot re-run training due to CPU time limit. Stored evidence (SLURM job log in STATUS.md) is consistent with the claim. B1 plausible but not independently confirmed.",
+  "verdict_B1_code": "CONFIRMED at code level — all CUDA references gated by torch.cuda.is_available() or --device defaulting to CPU. The training script can run on CPU-only hardware."
+}

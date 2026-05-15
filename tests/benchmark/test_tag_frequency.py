@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from benchmark.tag_frequency import (
+from aksu.benchmark.tag_frequency import (
     build_frequency_table,
     count_tags,
     extract_tags,

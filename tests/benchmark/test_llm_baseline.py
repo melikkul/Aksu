@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from benchmark.llm_baseline import (
+from aksu.benchmark.llm_baseline import (
     LLMBaselineResult,
     build_prompt,
     evaluate_via_anthropic,

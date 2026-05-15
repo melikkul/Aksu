@@ -4,10 +4,10 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from resource.schema import MorphDatabase, MorphEntry
-from resource.corpus_processor import parse_conllu_file
-from resource.importers.boun import import_boun
-from resource.tag_mappings import ud_feats_to_canonical, unimorph_tags_to_canonical
+from aksu.resource.schema import MorphDatabase, MorphEntry
+from aksu.resource.corpus_processor import parse_conllu_file
+from aksu.resource.importers.boun import import_boun
+from aksu.resource.tag_mappings import ud_feats_to_canonical, unimorph_tags_to_canonical
 
 
 # Minimal CoNLL-U fixture

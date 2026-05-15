@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from resource.importers.bounti import import_bounti
-from resource.importers.trendyol import clean_review, import_trendyol
-from train.domain_curriculum import DomainAwareCurriculum
+from aksu.resource.importers.bounti import import_bounti
+from aksu.resource.importers.trendyol import clean_review, import_trendyol
+from aksu.train.domain_curriculum import DomainAwareCurriculum
 
 
 def test_trendyol_clean_review_strips_noise() -> None:

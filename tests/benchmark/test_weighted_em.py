@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from benchmark.weighted_em import (
+from aksu.benchmark.weighted_em import (
     compute_emma_f1,
     corpus_weighted_em,
     score_pair,

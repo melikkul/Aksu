@@ -9,7 +9,7 @@ pytest.importorskip("optuna")
 def test_create_study_returns_optuna_study():
     import optuna
 
-    from train.hpo import create_study
+    from aksu.train.hpo import create_study
 
     study = create_study(study_name="test_study", storage=None)
     assert isinstance(study, optuna.Study)
@@ -20,7 +20,7 @@ def test_search_space_suggested_params_cover_expected_keys():
     """Run 1 trial on a fake objective that just touches every suggestion."""
     import optuna
 
-    from train.hpo import create_study
+    from aksu.train.hpo import create_study
 
     recorded: dict = {}
 
@@ -53,7 +53,7 @@ def test_pruning_triggers_on_bad_trial():
     """A trial that reports worsening intermediate values should be prunable."""
     import optuna
 
-    from train.hpo import create_study
+    from aksu.train.hpo import create_study
 
     def _bad_trial(trial: optuna.Trial) -> float:
         for step in range(20):
@@ -75,7 +75,7 @@ def test_pruning_triggers_on_bad_trial():
 def test_run_hpo_writes_json(tmp_path):
     import optuna
 
-    from train import hpo as hpo_mod
+    from aksu.train import hpo as hpo_mod
 
     # Monkey-patch the objective to a trivial stub so we don't need data
     original_objective = hpo_mod.objective

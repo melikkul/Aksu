@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from resource.boundary_extractor import extract_boundaries, _find_root_end
+from aksu.resource.boundary_extractor import extract_boundaries, _find_root_end
 
 
 class TestExtractBoundaries:

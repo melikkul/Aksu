@@ -14,7 +14,7 @@ from __future__ import annotations
 import torch
 import torch.nn.functional as F
 
-from train.losses import (
+from aksu.train.losses import (
     FocalLoss,
     LabelSmoothingCE,
     SymmetricCrossEntropy,

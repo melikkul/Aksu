@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import random
 
-from data.char_augmentation import (
+from aksu.data.char_augmentation import (
     ASCII_TO_DIACRITIC,
     DIACRITIC_TO_ASCII,
     TURKISH_QWERTY_COORDS,
@@ -53,7 +53,7 @@ def test_diacritic_harmony_safe_swap():
     random.seed(2)
     aug = DiacriticAugmenter(prob=1.0, mode="swap", harmony_safe=True)
     # ı is back-vowel; it must not turn into a front-class letter like ü or ö
-    from data.char_augmentation import BACK_VOWELS, FRONT_VOWELS
+    from aksu.data.char_augmentation import BACK_VOWELS, FRONT_VOWELS
     for _ in range(20):
         out = aug.augment("ı")
         assert out in BACK_VOWELS, f"harmony violated: {out!r}"

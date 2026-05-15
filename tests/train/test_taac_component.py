@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from train.curriculum import TAAC
+from aksu.train.curriculum import TAAC
 
 
 class TestComponentAware:

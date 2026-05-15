@@ -1,0 +1,12 @@
+--- a/dvc.yaml
++++ b/dvc.yaml
+@@ -14,7 +14,7 @@
+   prelabel:
+     cmd: PYTHONPATH=src python src/data/prelabel.py
+     deps:
+       - src/data/prelabel.py
+-      - src/morpho_tr/core/analyzer.py
++      - src/kokturk/core/analyzer.py
+       - data/processed/corpus.jsonl
+     outs:
+       - data/prelabeled/candidates.jsonl

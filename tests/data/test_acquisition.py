@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from data.acquisition import MorphAcquisition, select_batch
+from aksu.data.acquisition import MorphAcquisition, select_batch
 
 
 class TestMAD:

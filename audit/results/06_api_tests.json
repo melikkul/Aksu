@@ -1,0 +1,39 @@
+{
+  "F2_F3_atomizer_examples": {
+    "note": "Atomizer uses Zeyrek backend; canonical format includes POS tags (+Noun/+Verb). README examples use OLD format (no POS tags). Training data labels MATCH the current format.",
+    "evlerinden": {"got": "ev +Noun +POSS.3PL +ABL", "expected_readme": "ev +PLU +POSS.3SG +ABL", "match": false},
+    "gidiyordum": {"got": "gitmek +Verb +PROG +PAST", "expected_readme": "git +PROG +PAST +1SG", "match": false},
+    "kitapcilardan": {"got": "Kitap +Noun +AGT +Noun +PLU +ABL", "expected_readme": "kitap +AGT +PLU +ABL", "match": false},
+    "root_cause": "ZEYREK_TO_CANONICAL includes POS tags (Noun→+Noun); A1sg→'' (empty); roots from Zeyrek lemmatizer differ from README examples. Training data labels DO include POS tags — code/data are internally consistent. README examples are outdated.",
+    "verdict_F2": "REFUTED — exact string mismatch for all 3 documented examples",
+    "verdict_F3": "REFUTED — same issue"
+  },
+  "F1_disambiguator": {
+    "verdict": "REFUTED — DisambiguatorBackend.__init__() (analyzer.py:360) uses Path() without importing pathlib, raising NameError at load time. MorphoAnalyzer(backends=['disambiguator']) cannot instantiate.",
+    "bug_location": "src/kokturk/core/analyzer.py:360 — missing 'from pathlib import Path'"
+  },
+  "F4_sklearn": {
+    "corpus_size": 941,
+    "classes": ["conj", "other"],
+    "n_classes_used": 2,
+    "train_size": 658,
+    "test_size": 283,
+    "unique_predicted_classes": 2,
+    "mean_max_proba": 0.836,
+    "tfidf_vocab_size": 1722,
+    "test_accuracy": 0.936,
+    "assertions": ["n_unique_classes > 1: PASS", "mean_max_proba < 0.95: PASS", "vocab_size >= 100: PASS"],
+    "verdict_F4": "CONFIRMED — MorphoTransformer + TF-IDF + LogReg pipeline works; atomization produces non-trivial feature vocabulary"
+  },
+  "F5_cli": {
+    "command": "python -m kokturk.cli.main analyze 'evlerinden'",
+    "output": "evlerinden           → ev +Noun +POSS.3PL +ABL",
+    "verdict_F5": "CONFIRMED — CLI works; output matches code behavior (note: README example format is outdated)"
+  },
+  "F6_ariturk": {
+    "clean_result": "türkçe metin",
+    "turkish_lower_I": "ı",
+    "turkish_upper_i": "İ",
+    "verdict_F6": "CONFIRMED — TextCleaner and Turkish locale casing work correctly"
+  }
+}

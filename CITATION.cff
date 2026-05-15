@@ -1,15 +1,18 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: "kok-turk: Neural Morphological Atomization for Turkish"
+title: "Aksu: Neural Morphological Atomization for Turkish"
+version: 1.0.0a0
 authors:
   - family-names: "Kul"
     given-names: "Melik"
+    email: "metinkul895@gmail.com"
 license: MIT
-repository-code: "https://github.com/melikkul/KokTurk"
+repository-code: "https://github.com/melikkul/Aksu"
 keywords:
   - turkish
   - morphology
   - nlp
+  - atomizer
   - tokenization
   - agglutinative-languages

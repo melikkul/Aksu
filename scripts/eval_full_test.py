@@ -30,7 +30,7 @@ import torch
 PROJECT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT / "src"))
 
-from train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX  # noqa: E402
+from aksu.train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX  # noqa: E402
 
 TEST_PATH = PROJECT / "data" / "splits" / "test.jsonl"
 CHAR_VOCAB_PATH = PROJECT / "models" / "vocabs" / "char_vocab.json"
@@ -208,7 +208,7 @@ def infer_sizes(state_dict: dict, mc: str) -> dict:
 def build_model(mc: str, info: dict) -> torch.nn.Module:
     """Instantiate the correct model class with inferred hyperparameters."""
     if mc == "seq2seq":
-        from kokturk.models.char_gru import MorphAtomizer
+        from aksu.kokturk.models.char_gru import MorphAtomizer
         return MorphAtomizer(
             char_vocab_size=info["char_vocab_size"],
             tag_vocab_size=info["tag_vocab_size"],
@@ -219,7 +219,7 @@ def build_model(mc: str, info: dict) -> torch.nn.Module:
         )
 
     if mc == "dual_head":
-        from kokturk.models.dual_head import DualHeadAtomizer
+        from aksu.kokturk.models.dual_head import DualHeadAtomizer
         return DualHeadAtomizer(
             char_vocab_size=info["char_vocab_size"],
             tag_vocab_size=info["tag_vocab_size"],
@@ -233,14 +233,14 @@ def build_model(mc: str, info: dict) -> torch.nn.Module:
     if mc == "contextual_dual_head":
         ct = info.get("context_type", "word2vec")
         if ct == "word2vec":
-            from kokturk.models.context_encoder import Word2VecContext
+            from aksu.kokturk.models.context_encoder import Word2VecContext
             ctx_enc = Word2VecContext(
                 vocab_size=info["ctx_vocab_size"],
                 embed_dim=info["ctx_embed_dim"],
                 gru_hidden_dim=info["ctx_gru_hidden"],
             )
         elif ct == "sentence_bigru":
-            from kokturk.models.context_encoder import SentenceBiGRUContext
+            from aksu.kokturk.models.context_encoder import SentenceBiGRUContext
             ctx_enc = SentenceBiGRUContext(
                 vocab_size=info["ctx_vocab_size"],
                 embed_dim=info["ctx_embed_dim"],
@@ -252,12 +252,12 @@ def build_model(mc: str, info: dict) -> torch.nn.Module:
             # context anyway. So we create a minimal stand-in.
             ctx_enc = _DummyContextEncoder(info["ctx_context_dim"])
         else:
-            from kokturk.models.context_encoder import Word2VecContext
+            from aksu.kokturk.models.context_encoder import Word2VecContext
             ctx_enc = Word2VecContext(
                 vocab_size=5982, embed_dim=128, gru_hidden_dim=64,
             )
 
-        from kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
+        from aksu.kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
         return ContextualDualHeadAtomizer(
             context_encoder=ctx_enc,
             char_vocab_size=info["char_vocab_size"],

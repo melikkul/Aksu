@@ -6,12 +6,12 @@ from types import SimpleNamespace
 
 import pytest
 
-from kokturk.core.compound_lexicon import (
+from aksu.kokturk.core.compound_lexicon import (
     FUSED_LVC_TABLE,
     decompose_fused_lvc,
     is_fused_lvc,
 )
-from kokturk.core.lvc_mining import (
+from aksu.kokturk.core.lvc_mining import (
     _has_morphophonological_alternation,
     _restore_nominal_candidates,
     mine_fused_lvcs_from_corpus,
@@ -127,8 +127,8 @@ def test_table_entries_are_well_formed():
 def test_analyzer_decompose_lvc_flag(monkeypatch):
     # Skip the heavy ZeyrekBackend init by monkeypatching the registry to a
     # fake backend that returns a known parse for "reddetti".
-    from kokturk.core import analyzer as analyzer_module
-    from kokturk.core.datatypes import MorphologicalAnalysis
+    from aksu.kokturk.core import analyzer as analyzer_module
+    from aksu.kokturk.core.datatypes import MorphologicalAnalysis
 
     class FakeBackend:
         def analyze(self, word):

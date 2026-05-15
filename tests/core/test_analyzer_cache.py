@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from kokturk.core.analyzer import MorphoAnalyzer
-from kokturk.core.cache import AnalysisCache
-from kokturk.core.datatypes import MorphologicalAnalysis, TokenAnalyses
+from aksu.kokturk.core.analyzer import MorphoAnalyzer
+from aksu.kokturk.core.cache import AnalysisCache
+from aksu.kokturk.core.datatypes import MorphologicalAnalysis, TokenAnalyses
 
 
 def _make_token(word: str) -> TokenAnalyses:
@@ -22,7 +22,7 @@ def _make_token(word: str) -> TokenAnalyses:
 
 
 class TestEnableCache:
-    @patch("kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
+    @patch("aksu.kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
     def test_enable_cache_replaces(self) -> None:
         analyzer = MorphoAnalyzer(backends=["zeyrek"])
         old_cache = analyzer.cache
@@ -31,7 +31,7 @@ class TestEnableCache:
         assert new_cache is not old_cache
         assert new_cache.capacity == 200
 
-    @patch("kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
+    @patch("aksu.kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
     def test_enable_cache_disk(self, tmp_path) -> None:
         analyzer = MorphoAnalyzer(backends=["zeyrek"])
         disk_path = str(tmp_path / "cache")
@@ -40,7 +40,7 @@ class TestEnableCache:
 
 
 class TestCacheStats:
-    @patch("kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
+    @patch("aksu.kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
     def test_cache_stats_property(self) -> None:
         analyzer = MorphoAnalyzer(backends=["zeyrek"])
         stats = analyzer.cache_stats
@@ -50,7 +50,7 @@ class TestCacheStats:
         assert "memory_entries" in stats
         assert "disk_entries" in stats
 
-    @patch("kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
+    @patch("aksu.kokturk.core.analyzer._BACKEND_REGISTRY", {"zeyrek": MagicMock})
     def test_cache_stats_after_usage(self) -> None:
         analyzer = MorphoAnalyzer(backends=["zeyrek"])
         # Manually put/get to test stats

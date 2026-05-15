@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from kokturk.core.analyzer import MorphoAnalyzer
-from kokturk.core.code_switch import (
+from aksu.kokturk.core.analyzer import MorphoAnalyzer
+from aksu.kokturk.core.code_switch import (
     analyze_foreign_suffixes,
     classify_foreign_root,
     detect_code_switch,
     split_foreign_suffix,
 )
-from kokturk.core.datatypes import TokenAnalyses
+from aksu.kokturk.core.datatypes import TokenAnalyses
 
 # -----------------------------------------------------------------------
 # split_foreign_suffix
@@ -217,7 +217,7 @@ class TestAnalyzerCodeSwitchIntegration:
     def _make_analyzer() -> MorphoAnalyzer:
         """Create an analyzer with no real backends."""
         analyzer = MorphoAnalyzer.__new__(MorphoAnalyzer)
-        from kokturk.core.cache import AnalysisCache
+        from aksu.kokturk.core.cache import AnalysisCache
 
         analyzer._backends = []
         analyzer._cache = AnalysisCache(capacity=100)

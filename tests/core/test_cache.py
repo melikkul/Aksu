@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from kokturk.core.cache import AnalysisCache
-from kokturk.core.datatypes import MorphologicalAnalysis, TokenAnalyses
+from aksu.kokturk.core.cache import AnalysisCache
+from aksu.kokturk.core.datatypes import MorphologicalAnalysis, TokenAnalyses
 
 
 def _make_token(word: str) -> TokenAnalyses:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from benchmark.speed_benchmark import (
+from aksu.benchmark.speed_benchmark import (
     BenchmarkBundle,
     _percentile,
     benchmark_competitors,

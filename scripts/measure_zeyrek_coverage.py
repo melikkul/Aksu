@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from kokturk.core.analyzer import ZeyrekBackend
+from aksu.kokturk.core.analyzer import ZeyrekBackend
 
 
 def load_data(path: Path) -> list[dict]:

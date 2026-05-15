@@ -1,0 +1,20 @@
+{
+  "G1_dvc_pipeline_reproducible": {
+    "unmodified_result": {
+      "command": "dvc repro",
+      "exit_code": 0,
+      "first_failure": "ERROR: failed to reproduce 'ingest': [Errno 2] No such file or directory: 'data/external/boun_treebank'",
+      "stage_failed": "ingest",
+      "failure_reason": "BOUN Treebank not cloned (data/external/boun_treebank/ empty). setup.sh clones it but was not run in audit venv."
+    },
+    "patch_analysis": {
+      "patch_file": "audit/branches/dvc-fix.patch",
+      "applies_cleanly": true,
+      "change": "dvc.yaml:17 — src/morpho_tr/core/analyzer.py → src/kokturk/core/analyzer.py",
+      "classification": "BIT-ROT — stale reference to pre-rename module path. The rename to 'kokturk' is documented in CLAUDE.md but dvc.yaml was not updated. This is an infrastructure artifact, NOT a substantive research-claim refutation.",
+      "would_unblock": "prelabel stage — only if boun_treebank is also available"
+    },
+    "pipeline_order": ["ingest (blocked: boun_treebank missing)", "prelabel (blocked: boun_treebank + morpho_tr stale ref)", "label_model", "create_seed", "acquisition"],
+    "verdict_G1": "REFUTED — dvc repro fails at ingest stage due to missing external data. Two compounding blockers: (1) BOUN Treebank not cloned [setup.sh dependency], (2) dvc.yaml:17 stale morpho_tr path [bit-rot after rename]. Neither is a fundamental research claim; both are infrastructure/maintenance issues. Pipeline cannot be reproduced end-to-end from the checked-out state."
+  }
+}

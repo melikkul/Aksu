@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.paradigm_augmentation import (
+from aksu.data.paradigm_augmentation import (
     NOMINAL_PARADIGM,
     attach_suffix,
     augment_corpus,

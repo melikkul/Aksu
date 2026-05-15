@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from resource.schema import MorphDatabase, MorphEntry
+from aksu.resource.schema import MorphDatabase, MorphEntry
 
 @pytest.fixture
 def db(tmp_path):

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from annotation.auto_accept import auto_accept_seed
+from aksu.annotation.auto_accept import auto_accept_seed
 
 
 def _make_seed(tokens: list[dict[str, object]]) -> list[dict[str, object]]:

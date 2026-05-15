@@ -10,7 +10,7 @@ import time
 
 import pytest
 
-from kokturk.core.analyzer import MorphoAnalyzer
+from aksu.kokturk.core.analyzer import MorphoAnalyzer
 
 TEST_WORDS = [
     "evlerinden", "gidiyorum", "yapılmış", "kitabı", "çocuklar",

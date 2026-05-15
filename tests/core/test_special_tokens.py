@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from kokturk.core.special_token_types import SpecialTokenResult
-from kokturk.core.special_tokens import (
+from aksu.kokturk.core.special_token_types import SpecialTokenResult
+from aksu.kokturk.core.special_tokens import (
     decompose_reduplication,
     get_abbreviation_final_vowel,
     get_numeric_final_vowel,
@@ -130,8 +130,8 @@ class TestDispatcherFallthrough:
 
 
 def test_analyzer_handle_special_tokens_flag(monkeypatch):
-    from kokturk.core import analyzer as analyzer_module
-    from kokturk.core.datatypes import MorphologicalAnalysis
+    from aksu.kokturk.core import analyzer as analyzer_module
+    from aksu.kokturk.core.datatypes import MorphologicalAnalysis
 
     class FakeBackend:
         def analyze(self, word):

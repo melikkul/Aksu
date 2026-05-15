@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 import torch
 
-from kokturk.models.char_gru import MorphAtomizer
-from kokturk.models.char_gru_copy import CopyTagDecoder, MorphAtomizerCopy
+from aksu.kokturk.models.char_gru import MorphAtomizer
+from aksu.kokturk.models.char_gru_copy import CopyTagDecoder, MorphAtomizerCopy
 
 CHAR_VOCAB = 20
 TAG_VOCAB = 30

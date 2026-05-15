@@ -18,13 +18,13 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-from kokturk.models.context_encoder import (
+from aksu.kokturk.models.context_encoder import (
     BERTurkContext,
     POSBigramContext,
     SentenceBiGRUContext,
     Word2VecContext,
 )
-from kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
+from aksu.kokturk.models.contextual_dual_head import ContextualDualHeadAtomizer
 
 # ---------------------------------------------------------------------------
 # Shared constants for tests

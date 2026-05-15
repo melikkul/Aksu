@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from benchmark.domain_bias import (
+from aksu.benchmark.domain_bias import (
     DomainBiasReport,
     classify_domain,
     generate_bias_summary,

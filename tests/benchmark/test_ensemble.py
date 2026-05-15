@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from kokturk.models.ensemble import AtomizerEnsemble
+from aksu.kokturk.models.ensemble import AtomizerEnsemble
 
 # ---------------------------------------------------------------------------
 # Majority vote logic (no model loading required)

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.split_corpus import split_corpus
+from aksu.data.split_corpus import split_corpus
 
 
 class TestSplitCorpus:

@@ -16,7 +16,7 @@ import math
 
 import pytest
 
-from benchmark.mis_metric import (
+from aksu.benchmark.mis_metric import (
     ALLOMORPH_COUNTS,
     DERIVATIONAL_TAGS,
     MIS_ALPHA,

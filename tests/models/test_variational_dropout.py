@@ -4,7 +4,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from kokturk.models.variational_dropout import VariationalDropout, WeightDropout
+from aksu.kokturk.models.variational_dropout import VariationalDropout, WeightDropout
 
 
 def test_variational_dropout_identity_when_p_zero():

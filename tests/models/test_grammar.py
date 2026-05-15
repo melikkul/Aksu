@@ -17,7 +17,7 @@ import torch
 class TestVowelHarmony:
     def test_valid_front(self):
         """Ön ünlü sözcük — uyum geçerli."""
-        from kokturk.core.phonology import check_vowel_harmony
+        from aksu.kokturk.core.phonology import check_vowel_harmony
 
         # "gülüm" → ü+ü, her ikisi ön-yuvarlak, tam uyum
         result = check_vowel_harmony("gülüm")
@@ -26,7 +26,7 @@ class TestVowelHarmony:
 
     def test_valid_back(self):
         """Arka ünlü sözcük — uyum geçerli."""
-        from kokturk.core.phonology import check_vowel_harmony
+        from aksu.kokturk.core.phonology import check_vowel_harmony
 
         result = check_vowel_harmony("araba")
         assert result.ok is True
@@ -34,7 +34,7 @@ class TestVowelHarmony:
 
     def test_two_way_violation(self):
         """Ön/arka karışımı → error."""
-        from kokturk.core.phonology import check_vowel_harmony
+        from aksu.kokturk.core.phonology import check_vowel_harmony
 
         # Yapay sözcük: ön + arka ünlü
         result = check_vowel_harmony("gülar")
@@ -43,7 +43,7 @@ class TestVowelHarmony:
 
     def test_four_way_warning(self):
         """Yuvarlak/düz karışımı (ama ön/arka tutarlı) → warning."""
-        from kokturk.core.phonology import check_vowel_harmony
+        from aksu.kokturk.core.phonology import check_vowel_harmony
 
         # Ön ünlüler ama yuvarlak + düz karışımı: ö + e
         result = check_vowel_harmony("göle")
@@ -53,7 +53,7 @@ class TestVowelHarmony:
 
     def test_single_vowel(self):
         """Tek ünlü — her zaman geçerli."""
-        from kokturk.core.phonology import check_vowel_harmony
+        from aksu.kokturk.core.phonology import check_vowel_harmony
 
         result = check_vowel_harmony("ev")
         assert result.ok is True
@@ -67,7 +67,7 @@ class TestVowelHarmony:
 class TestSpellChecker:
     def test_deasciify_guzel(self):
         """'guzel' → 'güzel' dönüşümü."""
-        from kokturk.models.spell_checker import TurkishSpellChecker
+        from aksu.kokturk.models.spell_checker import TurkishSpellChecker
 
         checker = TurkishSpellChecker()
         results = checker.check("guzel")
@@ -77,7 +77,7 @@ class TestSpellChecker:
 
     def test_casing_istanbul(self):
         """'Istanbul' → 'İstanbul' büyük I düzeltmesi."""
-        from kokturk.models.spell_checker import TurkishSpellChecker
+        from aksu.kokturk.models.spell_checker import TurkishSpellChecker
 
         checker = TurkishSpellChecker()
         results = checker.check("Istanbul")
@@ -87,7 +87,7 @@ class TestSpellChecker:
 
     def test_apostrophe_turkiyede(self):
         """'Turkiyede' → deasciify ile düzeltme."""
-        from kokturk.models.spell_checker import TurkishSpellChecker
+        from aksu.kokturk.models.spell_checker import TurkishSpellChecker
 
         checker = TurkishSpellChecker()
         # "Turkiyede" ASCII Türkçe karakter içerir (u→ü, i→İ vb.)
@@ -103,7 +103,7 @@ class TestSpellChecker:
 
     def test_correct_applies_high_confidence(self):
         """correct() yalnızca yüksek güvenilirlikli düzeltmeleri uygular."""
-        from kokturk.models.spell_checker import TurkishSpellChecker
+        from aksu.kokturk.models.spell_checker import TurkishSpellChecker
 
         checker = TurkishSpellChecker()
         corrected = checker.correct("Istanbul")
@@ -111,7 +111,7 @@ class TestSpellChecker:
 
     def test_valid_word_no_suggestion(self):
         """Geçerli sözcük için öneri yapılmaz."""
-        from kokturk.models.spell_checker import TurkishSpellChecker
+        from aksu.kokturk.models.spell_checker import TurkishSpellChecker
 
         checker = TurkishSpellChecker()
         results = checker.check("ev")
@@ -126,7 +126,7 @@ class TestSpellChecker:
 class TestGrammarChecker:
     def test_genitive_possessive(self):
         """'benim ev' → tamlayan-iyelik uyum hatası."""
-        from kokturk.models.grammar_checker import TurkishGrammarChecker
+        from aksu.kokturk.models.grammar_checker import TurkishGrammarChecker
 
         checker = TurkishGrammarChecker()
         errors = checker.check("benim ev")
@@ -137,7 +137,7 @@ class TestGrammarChecker:
 
     def test_no_false_positive_possessive(self):
         """'benim evim' → uyum hatası olmamalı."""
-        from kokturk.models.grammar_checker import TurkishGrammarChecker
+        from aksu.kokturk.models.grammar_checker import TurkishGrammarChecker
 
         checker = TurkishGrammarChecker()
         errors = checker.check("benim evim")
@@ -148,7 +148,7 @@ class TestGrammarChecker:
 
     def test_de_da_voiceless_rule(self):
         """Sert ünsüz sonrası 'de' → 'te' önerisi."""
-        from kokturk.models.grammar_checker import TurkishGrammarChecker
+        from aksu.kokturk.models.grammar_checker import TurkishGrammarChecker
 
         checker = TurkishGrammarChecker()
         # "kitap de" → "kitap" sert ünsüz p ile bitiyor
@@ -163,7 +163,7 @@ class TestGrammarChecker:
 
     def test_well_formed_sentence(self):
         """Düzgün cümle için kritik hata yok."""
-        from kokturk.models.grammar_checker import TurkishGrammarChecker
+        from aksu.kokturk.models.grammar_checker import TurkishGrammarChecker
 
         checker = TurkishGrammarChecker()
         errors = checker.check("bugün hava güzel")
@@ -180,13 +180,13 @@ class TestGrammarChecker:
 class TestPunctuationLabels:
     def test_label_count(self):
         """7 noktalama sınıfı tanımlı."""
-        from kokturk.models.punctuation_restorer import PUNCT_LABELS
+        from aksu.kokturk.models.punctuation_restorer import PUNCT_LABELS
 
         assert len(PUNCT_LABELS) == 7
 
     def test_symbol_mapping(self):
         """Sembol eşlemesi doğru."""
-        from kokturk.models.punctuation_restorer import PUNCT_SYMBOLS
+        from aksu.kokturk.models.punctuation_restorer import PUNCT_SYMBOLS
 
         assert PUNCT_SYMBOLS[0] == ""
         assert PUNCT_SYMBOLS[1] == ","
@@ -201,7 +201,7 @@ class TestPunctuationLabels:
 
 def _make_mock_punct_restorer():
     """Mock BERTurk ile PunctuationRestorer oluştur."""
-    from kokturk.models.punctuation_restorer import PunctuationRestorer
+    from aksu.kokturk.models.punctuation_restorer import PunctuationRestorer
 
     seq_len = 20
 
@@ -236,7 +236,7 @@ def _make_mock_punct_restorer():
 class TestPunctuationRestorer:
     def test_forward_shape(self):
         """Forward logits şekli (B, N, 7) olmalı."""
-        from kokturk.models.punctuation_restorer import PUNCT_LABELS
+        from aksu.kokturk.models.punctuation_restorer import PUNCT_LABELS
 
         model = _make_mock_punct_restorer()
         bs, nw = 2, 5
@@ -290,7 +290,7 @@ class TestPunctuationRestorer:
 class TestUnifiedGrammarChecker:
     def test_check_aggregates(self):
         """check() tüm modüllerden sorunları toplar."""
-        from kokturk.core.grammar import GrammarChecker
+        from aksu.kokturk.core.grammar import GrammarChecker
 
         checker = GrammarChecker(enable_punctuation=False)
         result = checker.check("Istanbul guzel")
@@ -298,7 +298,7 @@ class TestUnifiedGrammarChecker:
 
     def test_correct_returns_fixed(self):
         """correct() düzeltilmiş metin döndürür."""
-        from kokturk.core.grammar import GrammarChecker
+        from aksu.kokturk.core.grammar import GrammarChecker
 
         checker = GrammarChecker(enable_punctuation=False)
         corrected = checker.correct("Istanbul")
@@ -306,7 +306,7 @@ class TestUnifiedGrammarChecker:
 
     def test_result_dataclass(self):
         """GrammarResult özellikleri doğru çalışır."""
-        from kokturk.core.grammar import GrammarResult
+        from aksu.kokturk.core.grammar import GrammarResult
 
         r = GrammarResult(original="test", corrected="test", issues=[])
         assert not r.has_errors
@@ -314,7 +314,7 @@ class TestUnifiedGrammarChecker:
 
     def test_disabled_modules_skipped(self):
         """Devre dışı modüller atlanır."""
-        from kokturk.core.grammar import GrammarChecker
+        from aksu.kokturk.core.grammar import GrammarChecker
 
         checker = GrammarChecker(
             enable_punctuation=False,

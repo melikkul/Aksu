@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
+from aksu.kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
 
 
 class TestMorpheme:

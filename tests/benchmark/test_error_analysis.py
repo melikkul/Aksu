@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from benchmark.error_analysis import (
+from aksu.benchmark.error_analysis import (
     DIACRITIC_COST_MATRIX,
     RootErrorType,
     TagErrorType,

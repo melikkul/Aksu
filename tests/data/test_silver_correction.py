@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.noise_audit import generate_human_audit_sample
-from data.silver_correction import (
+from aksu.data.noise_audit import generate_human_audit_sample
+from aksu.data.silver_correction import (
     apply_heuristic_corrections,
     apply_rules_to_record,
     build_adj_gazetteer,

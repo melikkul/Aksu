@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from train.model_registry import (
+from aksu.train.model_registry import (
     DEFAULT_MODEL_NAME,
     get_champion_uri,
     promote_to_champion,

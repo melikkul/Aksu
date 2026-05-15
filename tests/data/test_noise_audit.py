@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from data.noise_audit import (
+from aksu.data.noise_audit import (
     run_cleanlab_token_audit,
     seq2seq_to_token_classification,
 )

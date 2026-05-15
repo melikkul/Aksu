@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from benchmark.compound_eval import (
+from aksu.benchmark.compound_eval import (
     COMPOUND_VERB_ROOTS,
     evaluate_compound_handling,
     evaluate_sI_ambiguity,
 )
-from benchmark.stratified_eval import _depth_bucket
+from aksu.benchmark.stratified_eval import _depth_bucket
 
 
 def test_depth_bucket_splits_deep_tail():
@@ -20,7 +20,7 @@ def test_depth_bucket_splits_deep_tail():
 
 
 def test_compound_verb_roots_all_in_table():
-    from kokturk.core.compound_lexicon import FUSED_LVC_TABLE
+    from aksu.kokturk.core.compound_lexicon import FUSED_LVC_TABLE
 
     for root in COMPOUND_VERB_ROOTS:
         assert root in FUSED_LVC_TABLE, f"{root} missing from FUSED_LVC_TABLE"

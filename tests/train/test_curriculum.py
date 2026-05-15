@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 import torch
 
-from train.curriculum import (
+from aksu.train.curriculum import (
     compute_tier_weights,
     get_allowed_tiers,
     get_curriculum_phase,

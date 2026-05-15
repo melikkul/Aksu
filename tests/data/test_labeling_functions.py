@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.labeling_functions import (
+from aksu.data.labeling_functions import (
     ABSTAIN,
     ALL_LFS,
     TokenContext,

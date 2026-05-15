@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from benchmark.robustness import (
+from aksu.benchmark.robustness import (
     CasingAttack,
     CodeSwitchAttack,
     DeasciificationAttack,

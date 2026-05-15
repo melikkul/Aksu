@@ -1,8 +1,18 @@
 # Changelog
 
-All notable changes to kokturk will be documented in this file.
+All notable changes to the Aksu project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [1.0.0a0] - 2026-05-16
+
+### Changed
+- **Package renamed `kokturk` → `aksu`** (Workstream A). Source tree consolidated under `src/aksu/`.
+  Sub-packages `aksu.kokturk` and `aksu.ariturk` preserved with full history via `git mv`.
+- Top-level `kokturk` and `ariturk` packages kept as deprecated compatibility shims (DeprecationWarning; removed in v2.0).
+- Version centralised in `aksu/_version.py`; `pyproject.toml` reads it dynamically.
+- License field corrected: `Apache-2.0` → `MIT` (code). Dataset published under CC BY 4.0.
+- Console script entry point: `aksu analyze "evlerinden"` (was `python -m kokturk.cli.main`).
 
 ## [0.5.0] - 2026-04-09
 

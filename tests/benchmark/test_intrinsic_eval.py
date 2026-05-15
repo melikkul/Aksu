@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from benchmark.intrinsic_eval import (
+from aksu.benchmark.intrinsic_eval import (
     compute_all_metrics,
     compute_exact_match,
     compute_root_accuracy,

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from data.pii_scan import (
+from aksu.data.pii_scan import (
     EMAIL_RE,
     IBAN_RE,
     PHONE_RE,

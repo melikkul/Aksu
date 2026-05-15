@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from benchmark.checklist_morpho import (
+from aksu.benchmark.checklist_morpho import (
     generate_dir_tests,
     generate_inv_tests,
     generate_mft_tests,

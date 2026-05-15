@@ -2,8 +2,8 @@
 from __future__ import annotations
 import pytest
 
-from resource.quality_check import assign_resource_tier, compute_agreement, tier_from_entries
-from resource.schema import MorphEntry
+from aksu.resource.quality_check import assign_resource_tier, compute_agreement, tier_from_entries
+from aksu.resource.schema import MorphEntry
 
 
 def _make_entry(source: str, tags: str = "ev +Noun", tier: str = "bronze") -> MorphEntry:

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from benchmark.standard_benchmarks import (
+from aksu.benchmark.standard_benchmarks import (
     StandardExample,
     evaluate_disambiguation_mode,
     evaluate_generation_mode,

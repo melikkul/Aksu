@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import pytest
 
-from resource.schema import MorphDatabase, MorphEntry
-from resource.training_bridge import export_training_data
+from aksu.resource.schema import MorphDatabase, MorphEntry
+from aksu.resource.training_bridge import export_training_data
 
 
 @pytest.fixture

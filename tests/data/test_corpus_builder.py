@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from data.corpus_builder import CorpusBuilder
+from aksu.data.corpus_builder import CorpusBuilder
 
 
 class TestCorpusBuilder:

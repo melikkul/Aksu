@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from classify.morph_features import MorphTagFeatures
+from aksu.classify.morph_features import MorphTagFeatures
 
 
 @pytest.fixture()

@@ -7,8 +7,8 @@ import os
 import pytest
 import torch
 
-from benchmark.polysemy_eval import evaluate_polysemy, load_polysemous_roots
-from kokturk.models.contrastive_root import (
+from aksu.benchmark.polysemy_eval import evaluate_polysemy, load_polysemous_roots
+from aksu.kokturk.models.contrastive_root import (
     ContrastiveRootHead,
     build_prefix_groups,
 )
@@ -92,7 +92,7 @@ def test_dual_head_default_mlp_state_dict_unchanged() -> None:
     This is the backward-compat invariant: existing v2 checkpoints (saved
     before the contrastive head existed) MUST still load with strict=True.
     """
-    from kokturk.models.dual_head import DualHeadAtomizer
+    from aksu.kokturk.models.dual_head import DualHeadAtomizer
     model = DualHeadAtomizer(
         char_vocab_size=50, tag_vocab_size=100, root_vocab_size=200,
         embed_dim=16, hidden_dim=32, num_layers=1,
@@ -104,7 +104,7 @@ def test_dual_head_default_mlp_state_dict_unchanged() -> None:
 
 
 def test_dual_head_contrastive_mode_creates_extra_params() -> None:
-    from kokturk.models.dual_head import DualHeadAtomizer
+    from aksu.kokturk.models.dual_head import DualHeadAtomizer
     model = DualHeadAtomizer(
         char_vocab_size=50, tag_vocab_size=100, root_vocab_size=200,
         embed_dim=16, hidden_dim=32, num_layers=1,
@@ -116,7 +116,7 @@ def test_dual_head_contrastive_mode_creates_extra_params() -> None:
 
 
 def test_dual_head_contrastive_forward_caches_loss() -> None:
-    from kokturk.models.dual_head import DualHeadAtomizer
+    from aksu.kokturk.models.dual_head import DualHeadAtomizer
     model = DualHeadAtomizer(
         char_vocab_size=20, tag_vocab_size=30, root_vocab_size=10,
         embed_dim=8, hidden_dim=16, num_layers=1,
@@ -139,7 +139,7 @@ def test_v2_checkpoint_backward_compat() -> None:
     ckpt_path = "models/atomizer_v2/best_model.pt"
     if not os.path.exists(ckpt_path):
         pytest.skip("v2 checkpoint not present in this environment")
-    from kokturk.models.dual_head import DualHeadAtomizer
+    from aksu.kokturk.models.dual_head import DualHeadAtomizer
     ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
     state = ckpt.get("model_state_dict", ckpt) if isinstance(ckpt, dict) else ckpt
     # Try to infer config from the checkpoint's stored shapes; if unavailable
