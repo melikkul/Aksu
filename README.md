@@ -33,7 +33,7 @@ The system operates in two modes:
 
 **Disambiguation** (primary) — Given a sentence, generate morphological candidates via Zeyrek, then select the best parse using BERTurk sentence context. This is how SOTA systems work.
 
-**Generation** (fallback) — For out-of-vocabulary words, a Dual-Head Decoder generates the parse character-by-character without requiring sentence context.
+**Generation** (fallback) — For out-of-vocabulary words, a Dual-Head Decoder decodes a tag-token sequence conditioned on a character-encoded input, without requiring sentence context.
 
 ## Performance
 
@@ -42,10 +42,12 @@ The system operates in two modes:
 | System | Exact Match | Type |
 |--------|------------|------|
 | MorseDisamb (Şeker & Eryiğit 2017) | 98.59% | Published SOTA |
-| **kök-türk** | **98.3%** | **Disambiguation** |
+| **kök-türk** | **98.3%** [^ensemble] | **Disambiguation** |
 | TransMorph (Akyürek et al. 2022) | 96.25% | Disambiguation |
 | SIGMORPHON baseline (2019) | 92.27% | Generation |
 | Yıldız et al. 2016 | 84.12% | Generation |
+
+[^ensemble]: 5-seed ensemble; single-seed range 97.98–98.28%, std 0.11pp; see `models/v6/ensemble_results.json`.
 
 ### Detailed System Comparison
 
@@ -82,10 +84,12 @@ Morphological atomization consistently improves every classifier — including B
 
 | System | Training Time | Hardware | Accuracy |
 |--------|-------------|----------|----------|
-| **kök-türk** | **14 min** | **CPU only** | **98.3%** |
+| **kök-türk** | **14 min** [^hw] | **TRUBA Orfoz (Intel Xeon Platinum 8362, CPU-only)** | **98.3%** [^ensemble] |
 | Typical Transformer NLP | Hours–days | GPU required | Varies |
 | BERTurk fine-tuning | ~2 hours | GPU required | ~95% |
 | Morse | Not reported | — | 98.59% |
+
+[^hw]: Pending re-timing under SLURM (`scripts/truba/submit_zeyrek_benchmark.sh`). Figure from training log; exact wall-clock will be updated after authoritative SLURM run.
 
 ### Inference
 
