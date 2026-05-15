@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - name: Install ruff
         run: pip install ruff
       - name: Ruff check
@@ -33,15 +33,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: "pip"
       - name: Install dependencies
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install -e ".[dev,benchmark]" 2>/dev/null || pip install pytest pytest-cov ruff mypy numpy zeyrek
+          pip install -e ".[dev,benchmark]"
       - name: Run tests (skip GPU and slow)
         run: |
-          python -m pytest tests/ -m "not gpu and not slow" -v --tb=short \
+          python -m pytest tests/ -m "not gpu and not slow" -q --tb=short \
             --cov=src --cov-report=xml --cov-report=term-missing
       - name: Upload coverage
         if: always()
@@ -49,3 +49,59 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+
+  readme-examples:
+    name: README Examples
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+      - name: Run README examples test
+        run: python -m pytest tests/test_readme_examples.py -v
+
+  dvc-repro-dry:
+    name: DVC Dry Repro
+    needs: lint
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install DVC
+        run: pip install 'dvc[s3]'
+      - name: Create stub deps for dry run
+        run: |
+          mkdir -p data/external/boun_treebank
+      - name: DVC dry repro
+        run: |
+          if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then
+            dvc repro --dry --allow-missing
+          else
+            dvc repro --dry
+          fi
+
+  license-version-consistency:
+    name: License & Version Consistency
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run consistency tests
+        run: python -m pytest tests/test_version_license_consistency.py -v
