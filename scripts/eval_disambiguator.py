@@ -1,0 +1,151 @@
+"""Evaluate v6 disambiguator ensemble; emit em_argmax and em_string per seed.
+
+Usage:
+    python scripts/eval_disambiguator.py \
+        --ckpts models/v6/disambiguator{,_s123,_s456,_s789,_s1337}/best_model.pt \
+        --test data/splits/test.jsonl \
+        --val  data/splits/val.jsonl \
+        --output models/v6/eval_results.json
+
+Requires: torch, transformers (BERTurk). Run on akya-cuda via SLURM.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import sys
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
+
+
+def _try_import():
+    try:
+        import torch
+        from torch.utils.data import DataLoader
+
+        from aksu.kokturk.models.disambiguator import BERTurkDisambiguator
+        from aksu.train.disambiguation_dataset import (
+            DisambiguationDataset,
+            disambiguation_collate,
+        )
+        from aksu.train.datasets import Vocab
+        from aksu.train.train_disambiguator import (
+            evaluate,
+            pre_cache_bert_embeddings,
+        )
+        return torch, DataLoader, BERTurkDisambiguator, DisambiguationDataset, disambiguation_collate, Vocab, evaluate, pre_cache_bert_embeddings
+    except ImportError as e:
+        logger.error("Missing dependency: %s. Install transformers + torch.", e)
+        sys.exit(1)
+
+
+def eval_one_seed(
+    ckpt_path: Path,
+    test_path: Path,
+    vocab_dir: Path,
+    *,
+    device: object,
+    batch_size: int = 64,
+) -> dict:
+    torch, DataLoader, BERTurkDisambiguator, DisambiguationDataset, collate, Vocab, evaluate, pre_cache_bert = _try_import()
+
+    char_vocab = Vocab.load(vocab_dir / "char_vocab.json")
+    tag_vocab  = Vocab.load(vocab_dir / "tag_vocab.json")
+
+    state = torch.load(str(ckpt_path), map_location=device, weights_only=True)
+    model = BERTurkDisambiguator(**state["model_config"])
+    model.load_state_dict(state["model_state_dict"])
+    model.to(device)
+    model.eval()
+
+    ds = DisambiguationDataset(test_path, char_vocab, tag_vocab)
+    loader = DataLoader(ds, batch_size=batch_size, shuffle=False, collate_fn=collate)
+
+    bert_cache = pre_cache_bert(ds, device)
+    metrics = evaluate(model, loader, device, bert_cache, tag_vocab)
+
+    # em_string: index candidates[i][pred_idx] for string-equality EM
+    from aksu.benchmark.em import pred_index_to_strings, em_string as compute_em_string
+
+    pred_strings = pred_index_to_strings(
+        metrics["pred_indices"],
+        ds.candidate_strings,
+    )
+    gold_strings = [cs[gi] for cs, gi in zip(ds.candidate_strings, metrics["gold_indices"])]
+    em_s = compute_em_string(pred_strings, gold_strings)
+
+    return {
+        "em_argmax": metrics["em_argmax"],
+        "em_string": em_s,
+        "n_tokens": len(ds),
+        "checkpoint": str(ckpt_path),
+    }
+
+
+def main() -> None:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ckpts", nargs="+", required=True)
+    ap.add_argument("--test", required=True)
+    ap.add_argument("--val",  default=None)
+    ap.add_argument("--vocab-dir", default="models/vocabs")
+    ap.add_argument("--output", default="models/v6/eval_results.json")
+    ap.add_argument("--batch-size", type=int, default=64)
+    args = ap.parse_args()
+
+    torch, *_ = _try_import()[:1] + [None] * 7  # type: ignore[misc]
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    logger.info("Device: %s", device)
+
+    results: dict[str, dict] = {}
+    em_argmax_list: list[float] = []
+    em_string_list: list[float] = []
+
+    for ckpt_str in args.ckpts:
+        ckpt = Path(ckpt_str)
+        logger.info("Evaluating %s ...", ckpt)
+        seed_key = ckpt.parent.name
+        try:
+            res = eval_one_seed(
+                ckpt, Path(args.test), Path(args.vocab_dir),
+                device=device, batch_size=args.batch_size,
+            )
+            results[seed_key] = res
+            em_argmax_list.append(res["em_argmax"])
+            em_string_list.append(res["em_string"])
+            logger.info(
+                "  %s: em_argmax=%.4f em_string=%.4f",
+                seed_key, res["em_argmax"], res["em_string"],
+            )
+        except Exception as e:
+            logger.error("Failed on %s: %s", ckpt, e)
+            results[seed_key] = {"error": str(e), "checkpoint": str(ckpt)}
+
+    # Ensemble: average predictions (simplified — real ensemble uses majority vote)
+    if em_argmax_list:
+        import statistics
+        results["ensemble"] = {
+            "em_argmax_mean": statistics.mean(em_argmax_list),
+            "em_string_mean": statistics.mean(em_string_list),
+            "em_argmax_std": statistics.stdev(em_argmax_list) if len(em_argmax_list) > 1 else 0.0,
+            "em_string_std": statistics.stdev(em_string_list) if len(em_string_list) > 1 else 0.0,
+            "n_seeds": len(em_argmax_list),
+        }
+        logger.info(
+            "Ensemble: em_argmax=%.4f±%.4f  em_string=%.4f±%.4f",
+            results["ensemble"]["em_argmax_mean"],
+            results["ensemble"]["em_argmax_std"],
+            results["ensemble"]["em_string_mean"],
+            results["ensemble"]["em_string_std"],
+        )
+
+    out = Path(args.output)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    logger.info("Results written to %s", out)
+
+
+if __name__ == "__main__":
+    main()
