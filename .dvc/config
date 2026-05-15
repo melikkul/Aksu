@@ -1,4 +1,4 @@
 [core]
     remote = local_storage
 ['remote "local_storage"']
-    url = /arf/home/scolakoglu/dvc_cache
+    url = /arf/scratch/scolakoglu/aksu-dvc-cache

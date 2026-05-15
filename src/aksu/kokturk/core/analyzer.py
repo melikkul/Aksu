@@ -13,6 +13,7 @@ import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 from aksu.kokturk.core.cache import AnalysisCache
@@ -267,15 +268,13 @@ class NeuralBackend(AnalyzerBackend):
         vocab_dir: str = "models/vocabs",
     ) -> None:
         # Load vocabs
-        from pathlib import Path as _Path
-
         import torch
 
         from aksu.kokturk.models.char_gru import MorphAtomizer
         from aksu.train.datasets import Vocab
 
-        self._char_vocab = Vocab.load(_Path(f"{vocab_dir}/char_vocab.json"))
-        self._tag_vocab = Vocab.load(_Path(f"{vocab_dir}/tag_vocab.json"))
+        self._char_vocab = Vocab.load(Path(f"{vocab_dir}/char_vocab.json"))
+        self._tag_vocab = Vocab.load(Path(f"{vocab_dir}/tag_vocab.json"))
 
         # Load model
         ckpt = torch.load(model_path, weights_only=True, map_location="cpu")

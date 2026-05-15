@@ -3,11 +3,11 @@
 **Turkish Morphological Atomizer** — Decompose Turkish words into their linguistic atoms using neural disambiguation. SOTA-competitive accuracy with minimal compute.
 
 ```python
-from kokturk import MorphoAnalyzer
+from aksu import Atomizer
 
-analyzer = MorphoAnalyzer(backends=["disambiguator"])
-results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
-# → ["çocuk +PLU", "ev +PLU +POSS.3SG +ABL", "çık +PAST +3SG"]
+atomizer = Atomizer(backend="zeyrek")
+atomizer.to_canonical("evlerinden")
+# → ev +Noun +POSS.3PL +ABL
 ```
 
 ## Highlights
@@ -23,11 +23,11 @@ results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
 
 kök-türk replaces statistical subword splitting (BPE/WordPiece) with linguistically motivated morpheme decomposition:
 
-| Input | BPE (BERTurk) | kök-türk |
-|-------|---------------|----------|
-| evlerinden | ev ##ler ##inden | ev +PLU +POSS.3SG +ABL |
-| gidiyordum | gidi ##yor ##dum | git +PROG +PAST +1SG |
-| kitapçılardan | kitap ##çı ##lar ##dan | kitap +AGT +PLU +ABL |
+| Input | BPE (BERTurk) | Aksu (measured) |
+|-------|---------------|-----------------|
+| evlerinden | ev ##ler ##inden | ev +Noun +POSS.3PL +ABL |
+| gidiyordum | gidi ##yor ##dum | gitmek +Verb +PROG +PAST |
+| kitapçılardan | kitap ##çı ##lar ##dan | kitap +Noun +AGT +Noun +PLU +ABL |
 
 The system operates in two modes:
 
@@ -89,12 +89,12 @@ Morphological atomization consistently improves every classifier — including B
 
 ### Inference
 
-| Component | Speed | Memory |
-|-----------|-------|--------|
-| Zeyrek candidate generation | ~6,380 tok/s | ~50 MB |
-| BERTurk embedding (cached) | ~3,200 sent/s | ~1.5 GB |
-| Reranker scoring | ~50,000 tok/s | ~10 MB |
-| Dual-Head generation | ~2,000 tok/s | ~20 MB |
+| Component | Speed | Memory | Notes |
+|-----------|-------|--------|-------|
+| Zeyrek candidate generation | ~1,210 tok/s | ~267 MB | Measured on Xeon Platinum 8480+, login node; see `audit/benchmark_results/zeyrek_throughput.json` |
+| BERTurk embedding (cached) | pending SLURM run | ~1.5 GB | |
+| Reranker scoring | pending SLURM run | ~10 MB | |
+| Dual-Head generation | pending SLURM run | ~20 MB | |
 
 ## Architecture
 
@@ -152,7 +152,7 @@ pip install -e .
 ### Sentence Disambiguation
 
 ```python
-from kokturk import MorphoAnalyzer
+from aksu import MorphoAnalyzer
 
 analyzer = MorphoAnalyzer(backends=["disambiguator"])
 results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
@@ -161,17 +161,17 @@ results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
 ### Single Word Analysis
 
 ```python
-from kokturk import Atomizer
+from aksu import Atomizer
 
-atomizer = Atomizer()
+atomizer = Atomizer(backend="zeyrek")
 atomizer.to_canonical("evlerinden")
-# → "ev +PLU +POSS.3SG +ABL"
+# → ev +Noun +POSS.3PL +ABL
 ```
 
 ### sklearn Pipeline
 
 ```python
-from kokturk.sklearn_ext import MorphoTransformer
+from aksu.kokturk.sklearn_ext import MorphoTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -186,24 +186,30 @@ pipe = Pipeline([
 ### Text Cleaning (arı-türk)
 
 ```python
-from ariturk import TextCleaner, turkish_lower
+from aksu.ariturk import TextCleaner
 
-cleaner = TextCleaner()
-cleaner.clean("  TÜRKÇE   metİn  ")  # → "türkçe metin"
-turkish_lower("I")  # → "ı"
+TextCleaner().clean("  TÜRKÇE   metİn  ")
+# → türkçe metin
+```
+
+```python
+from aksu.ariturk import turkish_lower
+
+turkish_lower("I")
+# → ı
 ```
 
 ### CLI
 
 ```bash
-python -m kokturk.cli.main analyze "evlerinden"
-# → ev +PLU +POSS.3SG +ABL
+aksu analyze "evlerinden"
+# → evlerinden           → ev +Noun +POSS.3PL +ABL
 ```
 
 ## Project Structure
 
 ```
-src/
+src/aksu/
 ├── kokturk/          # Core morphological atomizer
 │   ├── core/         # MorphoAnalyzer, datatypes, cache, phonology
 │   ├── models/       # Disambiguator, Dual-Head Decoder, context encoders
@@ -219,8 +225,8 @@ src/
 ## Citation
 
 ```bibtex
-@thesis{kul2026kokturk,
-  title={Neural Morphological Atomization for Turkish: Gold Standard Corpus Construction and Hybrid Text Classification},
+@thesis{kul2026aksu,
+  title={Aksu: Neural Morphological Atomization for Turkish: Gold Standard Corpus Construction and Hybrid Text Classification},
   author={Kul, Melik},
   year={2026},
   school={Ostim Technical University},

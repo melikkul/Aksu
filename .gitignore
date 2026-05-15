@@ -32,7 +32,6 @@ env/
 Thumbs.db
 
 # HPC / SLURM (internal)
-scripts/truba/
 docs/TRUBA_SETUP.md
 
 # ML artifacts

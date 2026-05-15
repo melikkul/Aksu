@@ -16,6 +16,64 @@ from pathlib import Path
 
 import numpy as np
 
+from aksu.benchmark.significance import (
+    holm_bonferroni_correction,
+    paired_bootstrap_test,
+)
+
+
+def _align_paired(
+    preds_a: dict[tuple, int],
+    preds_b: dict[tuple, int],
+    gold: dict[tuple, int],
+) -> tuple[list[int], list[int], list[int]]:
+    """Project three {(fold, doc_id): int} dicts onto their shared key set."""
+    shared = sorted(set(preds_a) & set(preds_b) & set(gold))
+    if not shared:
+        raise ValueError("paired bootstrap: no shared (fold, doc_id) keys")
+    return (
+        [preds_a[k] for k in shared],
+        [preds_b[k] for k in shared],
+        [gold[k] for k in shared],
+    )
+
+
+def _run_significance(
+    per_system_preds: dict[str, dict[tuple, int]],
+    gold: dict[tuple, int],
+    n_bootstrap: int = 10_000,
+    seed: int = 42,
+    alpha: float = 0.05,
+) -> dict:
+    systems = sorted(per_system_preds)
+    raw_p: list[float] = []
+    pairs: list[tuple[str, str]] = []
+    n_paired: list[int] = []
+    extras: list[dict] = []
+    for i, a in enumerate(systems):
+        for b in systems[i + 1:]:
+            pa, pb, gd = _align_paired(per_system_preds[a], per_system_preds[b], gold)
+            res = paired_bootstrap_test(pa, pb, gd, n_bootstrap=n_bootstrap, seed=seed)
+            pairs.append((a, b))
+            raw_p.append(res["p_value"])
+            n_paired.append(len(gd))
+            extras.append(res)
+    corr_p = holm_bonferroni_correction(raw_p)
+    return {
+        "pairs": [
+            {
+                "a": a, "b": b, "n_items": n,
+                "raw_p": rp, "corr_p": cp, "significant": cp < alpha,
+                "mean_diff": ex["mean_diff"],
+                "ci_lower": ex["ci_lower"], "ci_upper": ex["ci_upper"],
+                "cohens_d": ex["cohens_d"],
+            }
+            for (a, b), rp, cp, n, ex in zip(pairs, raw_p, corr_p, n_paired, extras)
+        ],
+        "n_bootstrap": n_bootstrap,
+        "alpha": alpha,
+    }
+
 logger = logging.getLogger(__name__)
 
 MODELS_DIR = Path("models")
@@ -110,8 +168,12 @@ def run_intrinsic_eval() -> dict[str, float]:
 
 # ── Section 2: Classification ────────────────────────────────
 
-def run_classification() -> dict[str, object]:
-    """Run TTC-3600 classification with multiple methods."""
+def run_classification() -> tuple[dict[str, object], dict[str, dict[tuple, int]], dict[tuple, int]]:
+    """Run TTC-3600 classification with multiple methods.
+
+    Returns (results, per_system_preds, gold) where per_system_preds maps
+    system name → {(fold, doc_id): predicted_label_id} for significance testing.
+    """
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
     from sklearn.metrics import f1_score
@@ -120,6 +182,8 @@ def run_classification() -> dict[str, object]:
     logger.info("=== Classification Benchmark ===")
 
     results: dict[str, dict[str, object]] = {}
+    per_system_preds: dict[str, dict[tuple, int]] = {}
+    shared_gold: dict[tuple, int] = {}
 
     # ── Real TTC-3600: pre-computed TF-IDF from UCI ARFF ──
     arff_path = Path("data/external/ttc3600/Original.arff")
@@ -156,11 +220,16 @@ def run_classification() -> dict[str, object]:
         # Method 1: LogReg on original TF-IDF features
         logger.info("Running: LogReg on TTC-3600 original TF-IDF features...")
         f1s_orig: list[float] = []
-        for train_idx, test_idx in skf.split(x_arff, y_arff):
+        sys_preds_orig: dict[tuple, int] = {}
+        for fold, (train_idx, test_idx) in enumerate(skf.split(x_arff, y_arff)):
             clf = LogisticRegression(max_iter=1000, C=1.0, random_state=42)
             clf.fit(x_arff[train_idx], y_arff[train_idx])
             preds = clf.predict(x_arff[test_idx])
             f1s_orig.append(f1_score(y_arff[test_idx], preds, average="macro"))
+            for doc_id, pred, gold_label in zip(test_idx.tolist(), preds.tolist(), y_arff[test_idx].tolist()):
+                sys_preds_orig[(fold, doc_id)] = int(pred)
+                shared_gold[(fold, doc_id)] = int(gold_label)
+        per_system_preds["logreg_original_tfidf"] = sys_preds_orig
         results["ttc3600_original_tfidf"] = {
             "macro_f1_mean": float(np.mean(f1s_orig)),
             "macro_f1_std": float(np.std(f1s_orig)),
@@ -272,7 +341,7 @@ def run_classification() -> dict[str, object]:
             texts_atom, texts_raw, y_synth, skf2,
         ))
 
-    return results
+    return results, per_system_preds, shared_gold
 
 
 def _run_improved_classification(
@@ -686,6 +755,21 @@ def generate_report(
     logger.info("Results saved to %s", results_path)
 
 
+def _write_significance_md(sig: dict, path: Path) -> None:
+    lines = [
+        "# Significance Table\n",
+        f"Bootstrap iterations: {sig['n_bootstrap']}, alpha: {sig['alpha']}\n",
+        "| System A | System B | N | raw_p | corr_p | significant | mean_diff |",
+        "|----------|----------|---|-------|--------|-------------|-----------|",
+    ]
+    for p in sig["pairs"]:
+        lines.append(
+            f"| {p['a']} | {p['b']} | {p['n_items']} | {p['raw_p']:.4f} |"
+            f" {p['corr_p']:.4f} | {p['significant']} | {p['mean_diff']:+.4f} |"
+        )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 # ── Main ─────────────────────────────────────────────────────
 
 def main() -> None:
@@ -696,10 +780,21 @@ def main() -> None:
     )
 
     intrinsic = run_intrinsic_eval()
-    classification = run_classification()
+    classification, per_system_preds, shared_gold = run_classification()
     efficiency = measure_efficiency()
     bpe_examples = analyze_bpe_failures()
     generate_report(intrinsic, classification, efficiency, bpe_examples)
+
+    # Significance testing across classification systems
+    sig_out = Path("audit/benchmark_results/significance_table.json")
+    if len(per_system_preds) >= 2:
+        sig_results = _run_significance(per_system_preds, shared_gold)
+        sig_out.parent.mkdir(parents=True, exist_ok=True)
+        sig_out.write_text(json.dumps(sig_results, indent=2), encoding="utf-8")
+        _write_significance_md(sig_results, sig_out.with_suffix(".md"))
+        logger.info("Significance table written to %s", sig_out)
+    else:
+        logger.info("Skipping significance (fewer than 2 systems with per-doc predictions)")
 
     print(f"\n{'='*60}")
     print("BENCHMARK COMPLETE")
