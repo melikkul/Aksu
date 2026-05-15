@@ -15,6 +15,16 @@ repos:
       - id: trailing-whitespace
       - id: check-merge-conflict
 
+  - repo: local
+    hooks:
+      - id: build-readme
+        name: Rebuild README from template
+        entry: python scripts/build_readme.py
+        language: python
+        additional_dependencies: [jinja2]
+        pass_filenames: false
+        files: '^(docs/README\.md\.j2|audit/benchmark_results/metrics\.json)$'
+
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.2.0
     hooks:

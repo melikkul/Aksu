@@ -1,4 +1,10 @@
-# Contributing to kokturk — Katkı Rehberi
+# Contributing to Aksu — Katkı Rehberi
+
+> **README.md is auto-generated.** Do **not** hand-edit `README.md` — your changes will be
+> overwritten by CI. To change README content, edit `docs/README.md.j2` (prose and structure)
+> or regenerate `audit/benchmark_results/metrics.json` from the appropriate benchmark script
+> (numeric cells). Then run `python scripts/build_readme.py` and commit the rendered `README.md`
+> alongside the template/metrics change so the byte-identical CI gate stays green.
 
 ## Welcome / Hoş Geldiniz
 
