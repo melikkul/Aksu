@@ -256,7 +256,8 @@ def benchmark_reranker(
     try:
         device = torch.device("cpu")
         state = torch.load(str(ckpt), map_location=device, weights_only=True)
-        # Checkpoints may use either "model_config" dict or individual keys.
+        # Checkpoints store only the lightweight reranker head weights, not BERTurk.
+        # BERTurk is loaded separately from models/berturk/ (frozen, pre-trained).
         if "model_config" in state:
             model_cfg = state["model_config"]
         else:
@@ -264,15 +265,19 @@ def benchmark_reranker(
                 "tag_vocab_size": state.get("tag_vocab_size", 512),
                 "bert_path": "models/berturk",
             }
-        model = BERTurkDisambiguator(**model_cfg)
-        model.load_state_dict(state["model_state_dict"])
-        model.eval()
-        model.to(device)
-
-        # Load tokenizer from the bert_path stored in model config, or fallback
         bert_path = model_cfg.get("bert_path", "models/berturk")
         if not Path(bert_path).exists():
             bert_path = "dbmdz/bert-base-turkish-cased"
+        # Initialize model (loads BERTurk from bert_path), then overlay
+        # checkpoint weights with strict=False — BERTurk keys will not be in
+        # the checkpoint state dict; only the reranker head keys are.
+        model = BERTurkDisambiguator(**model_cfg)
+        missing, unexpected = model.load_state_dict(state["model_state_dict"], strict=False)
+        # Expected: many BERTurk keys missing (loaded from pre-trained). Unexpected keys → error.
+        if unexpected:
+            raise RuntimeError(f"Unexpected keys in checkpoint: {unexpected[:3]}…")
+        model.eval()
+        model.to(device)
         tokenizer = AutoTokenizer.from_pretrained(bert_path)
     except Exception as exc:  # noqa: BLE001
         return {

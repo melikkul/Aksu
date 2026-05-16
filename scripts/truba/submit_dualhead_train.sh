@@ -66,6 +66,7 @@ fi
     --eval-data "$EVAL_PATH" \
     --char-vocab models/vocabs/char_vocab.json \
     --tag-vocab  models/vocabs/tag_vocab.json \
+    --root-vocab models/vocabs/root_vocab.json \
     --device cpu \
     --seed 42 \
     --output-dir "$OUT_DIR"

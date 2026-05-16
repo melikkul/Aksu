@@ -92,11 +92,12 @@ Numbers below are taken verbatim from their respective publications. They are no
 | Component | Speed | Memory | Notes |
 |-----------|-------|--------|-------|
 | Zeyrek candidate generation | {% if metrics.zeyrek_tok_per_sec %}~{{ metrics.zeyrek_tok_per_sec }} tok/s{% else %}pending SLURM run [^zeyrek-hw]{% endif %} | ~267 MB | {% if metrics.zeyrek_hardware %}{{ metrics.zeyrek_hardware }}{% else %}Run `sbatch scripts/truba/submit_zeyrek_benchmark.sh` on Orfoz{% endif %} |
-| BERTurk embedding (cached) | {% if metrics.berturk_sent_per_sec %}{{ metrics.berturk_sent_per_sec }} sent/s{% else %}pending SLURM run{% endif %} | ~1.5 GB | |
+| BERTurk embedding (cached) | {% if metrics.berturk_sent_per_sec %}{{ metrics.berturk_sent_per_sec }} sent/s [^cpu-variability]{% else %}pending SLURM run{% endif %} | ~1.5 GB | |
 | Reranker scoring | {% if metrics.reranker_tok_per_sec %}{{ metrics.reranker_tok_per_sec }} tok/s{% else %}pending SLURM run{% endif %} | ~10 MB | |
 | Dual-Head generation | {% if metrics.dualhead_tok_per_sec %}{{ metrics.dualhead_tok_per_sec }} tok/s{% else %}pending SLURM run{% endif %} | ~20 MB | |
 
 [^zeyrek-hw]: Measured on Orfoz compute node (SLURM job 5782171). Prior login-node figure (1,209 tok/s) was a diagnostic value only.
+[^cpu-variability]: CPU throughput on shared SLURM nodes (Orfoz) varies ±30–50% depending on co-scheduled workloads and NUMA placement. Treat as order-of-magnitude guidance; see `audit/halt_reports/2026-05-16-berturk-measurement-drift.md`.
 
 ## Architecture
 

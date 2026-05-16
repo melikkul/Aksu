@@ -55,7 +55,14 @@ def eval_one_seed(
     tag_vocab  = Vocab.load(vocab_dir / "tag_vocab.json")
 
     state = torch.load(str(ckpt_path), map_location=device, weights_only=True)
-    model = BERTurkDisambiguator(**state["model_config"])
+    if "model_config" in state:
+        model_cfg = state["model_config"]
+    else:
+        model_cfg = {
+            "tag_vocab_size": state.get("tag_vocab_size", len(tag_vocab)),
+            "bert_path": "models/berturk",
+        }
+    model = BERTurkDisambiguator(**model_cfg)
     model.load_state_dict(state["model_state_dict"])
     model.to(device)
     model.eval()
