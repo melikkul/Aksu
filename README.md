@@ -47,6 +47,16 @@ legal candidates; a frozen BERTurk encoder scores them in context; a 1M-paramete
 selects the best parse. Out-of-vocabulary words fall back to a Dual-Head sequence decoder.
 The result is a linguistically transparent representation every downstream task can exploit.
 
+## Features
+
+- **State-of-the-art disambiguation**: 98.3% Exact Match on the Aksu held-out test set (5-seed ensemble, em_string). Cross-system comparable.
+- **CPU-only training**: 16.71 minutes on TRUBA Orfoz (Intel Xeon Platinum 8362). No GPU required for training or inference.
+- **Hybrid neural-symbolic**: Zeyrek symbolic candidates → frozen BERTurk 768-dim encoder → 1M-parameter reranker. Best-parse selection without fine-tuning the language model.
+- **OOV fallback**: Dual-Head Decoder generates tag sequences character-by-character for words Zeyrek cannot parse (~4% of web-crawled Turkish).
+- **sklearn-compatible**: Drop-in `MorphoTransformer` for use in `sklearn.pipeline.Pipeline`.
+- **TR-Gold-Morph corpus**: 80,537 manually validated annotations across gold and silver tiers — the largest public Turkish morphological resource.
+- **Honest benchmarks**: Every number traces to a runnable script and a JSON artifact in `audit/benchmark_results/`.
+
 ## How It Works
 
 ## Performance
