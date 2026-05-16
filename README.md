@@ -116,7 +116,7 @@ Sentence: "Çocuklar evlerinden çıktı"
      │              │              │
      │        Score + Select       │
      │              │              │
- "Çocuk         "ev +Noun          "çıkmak
+ "çocuk         "ev +Noun          "çıkmak
   +Noun +PLU"    +POSS.3PL          +Verb +PAST"
                  +ABL"
 ```

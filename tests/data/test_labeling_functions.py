@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from aksu.data.labeling_functions import (
     ABSTAIN,
     ALL_LFS,
@@ -148,7 +150,9 @@ class TestLfPosBigram:
 
 
 class TestLfGazetteer:
-    def test_known_propn_votes_noun(self) -> None:
+    def test_known_propn_votes_noun(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        import aksu.data.labeling_functions as lf_mod
+        monkeypatch.setattr(lf_mod, "_proper_noun_gazetteer", {"Ankara"})
         ctx = _make_ctx("Ankara", [
             _make_analysis("Ankara", ["+Noun", "+Prop"], "zeyrek"),
         ])

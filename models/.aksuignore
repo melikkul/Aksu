@@ -1,0 +1,4 @@
+# Files exempt from the checkpoint-sidecar requirement.
+# Patterns are matched as substrings of the relative .pt path.
+# BERTurk embedding caches — reproducible from training scripts, not model weights.
+bert_cache/
