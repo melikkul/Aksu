@@ -71,8 +71,8 @@ def evaluate(
         raise SystemExit(1) from exc
 
     try:
-        from aksu.kokturk.models.dual_head import DualHeadAtomizer
         from aksu.benchmark.em import em_string as compute_em_string
+        from aksu.kokturk.models.dual_head import DualHeadAtomizer
     except ImportError as exc:
         logger.error("aksu package not found: %s", exc)
         raise SystemExit(1) from exc
@@ -83,6 +83,8 @@ def evaluate(
     # Load checkpoint
     # -----------------------------------------------------------------------
     logger.info("Loading checkpoint: %s", ckpt_path)
+    import pathlib
+    torch.serialization.add_safe_globals([pathlib.PosixPath])
     state = torch.load(str(ckpt_path), map_location=device, weights_only=True)
     model_cfg: dict = state["model_config"]
     model = DualHeadAtomizer(**model_cfg)
@@ -112,7 +114,7 @@ def evaluate(
     # Inference helpers
     # -----------------------------------------------------------------------
 
-    def _encode_word(word: str) -> "torch.Tensor":
+    def _encode_word(word: str) -> torch.Tensor:
         """Encode a single word as a (1, L_char) character-index tensor."""
         indices = [char_vocab.get(ch, unk_char_idx) for ch in word]
         return torch.tensor([indices], dtype=torch.long, device=device)

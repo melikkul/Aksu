@@ -253,6 +253,8 @@ def benchmark_reranker(
         }
 
     try:
+        import pathlib as _pathlib
+        torch.serialization.add_safe_globals([_pathlib.PosixPath])
         device = torch.device("cpu")
         state = torch.load(str(ckpt), map_location=device, weights_only=True)
         # Checkpoints store only the lightweight reranker head weights, not BERTurk.
@@ -372,6 +374,8 @@ def benchmark_dualhead(
         }
 
     try:
+        import pathlib as _pathlib
+        torch.serialization.add_safe_globals([_pathlib.PosixPath])
         device = torch.device("cpu")
         state = torch.load(str(ckpt), map_location=device, weights_only=True)
         model_cfg = state["model_config"]
