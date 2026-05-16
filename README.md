@@ -59,6 +59,35 @@ The result is a linguistically transparent representation every downstream task 
 
 ## How It Works
 
+Aksu operates in two modes depending on whether a word is in Zeyrek's lexicon.
+
+### Architecture
+
+```mermaid
+flowchart LR
+    S["Çocuklar evlerinden çıktı"] --> T[Tokenize]
+    T --> Z["Zeyrek<br/>candidate gen"]
+    Z --> C{Candidates?}
+    C -->|0 candidates| D["Dual-Head Decoder<br/>5.2M params"]
+    C -->|1 candidate| ACC[Accept]
+    C -->|2+ candidates| B["BERTurk encoder<br/>768-dim · frozen"]
+    B --> R["Reranker<br/>1M params · scalar score"]
+    R --> ACC
+    D --> ACC
+    ACC --> O["Çocuk +Noun +PLU<br/>ev +Noun +POSS.3PL +ABL<br/>çıkmak +Verb +PAST"]
+```
+
+**Disambiguation** (primary path, ~96% of tokens): Zeyrek generates morphologically
+legal candidates for each token. BERTurk encodes the full sentence in context;
+a lightweight reranker scores each candidate and selects the highest-scoring parse.
+BERTurk is used frozen — no fine-tuning, no GPU, just a 768-dimensional sentence
+representation fed to a 1M-parameter scoring head.
+
+**Generation** (OOV fallback, ~4% of tokens): Words Zeyrek cannot parse go to the
+Dual-Head Decoder: a character-level encoder reads the input, a root classifier
+predicts the lemma, and a conditional tag decoder emits the suffix sequence
+one tag at a time.
+
 ## Performance
 
 ### Measured in This Repository
@@ -121,43 +150,32 @@ Numbers below are taken verbatim from their respective publications. They are no
 [^zeyrek-hw]: Measured on Orfoz compute node (SLURM job 5782171). Prior login-node figure (1,209 tok/s) was a diagnostic value only.
 [^cpu-variability]: CPU throughput on shared SLURM nodes (Orfoz) varies ±30–50% depending on co-scheduled workloads and NUMA placement. Treat as order-of-magnitude guidance; see `audit/halt_reports/2026-05-16-berturk-measurement-drift.md`.
 
-## Architecture
+## Dataset — TR-Gold-Morph
 
-```
-Sentence: "Çocuklar evlerinden çıktı"
-                    │
-     ┌──────────────┼──────────────┐
-     │              │              │
- "Çocuklar"   "evlerinden"     "çıktı"
-     │              │              │
-   Zeyrek         Zeyrek         Zeyrek
-   6 candidates   4 candidates   2 candidates
-     │              │              │
-     │        ┌─────┴─────┐       │
-     │        │ BERTurk   │       │
-     │        │ (frozen)  │       │
-     │        │ 768-dim   │       │
-     │        └─────┬─────┘       │
-     │              │              │
-     │        Score + Select       │
-     │              │              │
- "çocuk         "ev +Noun          "çıkmak
-  +Noun +PLU"    +POSS.3PL          +Verb +PAST"
-                 +ABL"
-```
+| Version | Entries | Tiers | Status | License |
+|---------|---------|-------|--------|---------|
+| **TR-Gold-Morph v1** | **80,537** | gold 2,496 / silver 78,041 | ✅ Released | CC BY 4.0 |
+| TR-Gold-Morph v2 | ~2.5M target (pipeline ready, harvest pending v1.1) | gold / silver / bronze | 🚧 v1.1 roadmap | CC BY 4.0 + per-shard CC BY-SA |
 
-## TR-Gold-Morph
+Comparison with other public resources:
 
-The largest publicly annotated Turkish morphological resource:
+| Resource | Entries | Annotation | License |
+|----------|---------|-----------|---------|
+| **TR-Gold-Morph v1** | **80,537** | Auto + manual | CC BY 4.0 |
+| UniMorph Turkish | 275,460 | Rule-generated | CC BY-SA |
+| BOUN Treebank | ~121,000 | Manual | CC BY-SA 4.0 |
+| IMST Treebank | ~56,000 | Manual | CC BY-NC-SA 3.0 |
 
-| Resource | Entries | Annotation | Tiers | Boundaries | Formats | License |
-|----------|---------|-----------|-------|-----------|---------|---------|
-| **TR-Gold-Morph v1** | **80,537** | **Auto + manual** | **gold/silver/bronze** | **TBD** | **3 schemas** | **CC BY 4.0** |
-| TR-Gold-Morph v2 | 2.5M target (pipeline ready) | Auto + manual | gold/silver/bronze | target 95.6% | 3 schemas | CC BY 4.0 |
-| UniMorph Turkish | 275,460 | Rule-generated | — | — | UniMorph | CC BY-SA |
-| BOUN Treebank | ~121,000 | Manual | — | — | UD CoNLL-U | CC BY-SA 4.0 |
-| IMST Treebank | ~56,000 | Manual | — | — | UD CoNLL-U | CC BY-NC-SA 3.0 |
-| TrMor (Zemberek) | ~50,000 roots | Rule-based FSA | — | — | Custom | — |
+**Provenance:** TR-Gold-Morph v1 derives from BOUN Treebank and Zeyrek candidate sets.
+Gold tier: 2,496 linguist-verified entries. Silver tier: 78,041 ensemble-confident entries.
+
+TR-Gold-Morph v2 (2.5M target): autolabel pipeline is ready in this repository.
+Sources: OSCAR-tr (CC0/CC-BY-4.0), mC4-tr (ODC-BY), Wikipedia-tr (CC-BY-SA-3.0),
+BOUN Treebank (CC-BY-SA-4.0). IMST-UD used only for internal evaluation (NC clause).
+Source manifest: `data/external/manifest.json`.
+
+HuggingFace: `melikkul/tr-gold-morph` (v2 upload pending). License: CC BY 4.0 (main corpus).
+BOUN/Wikipedia-derived shards carry CC BY-SA — see [LICENSE-DATA](LICENSE-DATA).
 
 ## Installation
 
