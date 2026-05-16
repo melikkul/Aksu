@@ -26,21 +26,30 @@ atomizer.to_canonical("evlerinden")
 | ⚡ **{{ metrics.training_wall_clock_min }} min CPU training** | Frozen BERTurk encoder + 1M-param reranker — no GPU needed |
 | 📚 **{{ "{:,.0f}".format(metrics.dataset_v1_entries) }} annotated entries** | TR-Gold-Morph v1 — largest public Turkish morphological corpus |
 
-## How It Works
+## Why Aksu?
 
-kök-türk replaces statistical subword splitting (BPE/WordPiece) with linguistically motivated morpheme decomposition:
+Turkish is one of the world's most morphologically productive languages.
+A single root generates thousands of legal surface forms through agglutination — the verb *gitmek*
+(to go) alone yields *gidiyordum*, *gidemeyebilirdiniz*, *gidildiğinde*, and thousands more.
+Standard NLP pipelines treat each surface form as an unrelated token, erasing the shared root
+and the grammatical information the suffixes encode.
 
-| Input | BPE (BERTurk) | Aksu (measured) |
-|-------|---------------|-----------------|
+Subword tokenizers (BPE, WordPiece) split Turkish words into character fragments that happen to
+repeat in the training corpus. The fragments are linguistically arbitrary and over-split rare
+forms that a morphological analyzer handles correctly:
+
+| Input | BPE (BERTurk) | Aksu |
+|-------|---------------|------|
 | evlerinden | ev ##ler ##inden | ev +Noun +POSS.3PL +ABL |
 | gidiyordum | gidi ##yor ##dum | gitmek +Verb +PROG +PAST |
 | kitapçılardan | kitap ##çı ##lar ##dan | kitap +Noun +AGT +Noun +PLU +ABL |
 
-The system operates in two modes:
+Aksu replaces the BPE step with a neural-symbolic pipeline: Zeyrek generates morphologically
+legal candidates; a frozen BERTurk encoder scores them in context; a 1M-parameter reranker
+selects the best parse. Out-of-vocabulary words fall back to a Dual-Head sequence decoder.
+The result is a linguistically transparent representation every downstream task can exploit.
 
-**Disambiguation** (primary) — Given a sentence, generate morphological candidates via Zeyrek, then select the best parse using BERTurk sentence context. This is how SOTA systems work.
-
-**Generation** (fallback) — For out-of-vocabulary words, a Dual-Head Decoder decodes a tag-token sequence conditioned on a character-encoded input, without requiring sentence context.
+## How It Works
 
 ## Performance
 
