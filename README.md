@@ -178,18 +178,9 @@ pip install "aksu[benchmark]"       # + SciPy (significance tests)
 pip install "aksu[data]"            # + HuggingFace Datasets, diskcache
 ```
 
-## Usage
+## Quick Start
 
-### Sentence Disambiguation
-
-```python
-from aksu import MorphoAnalyzer
-
-analyzer = MorphoAnalyzer(backends=["disambiguator"])
-results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
-```
-
-### Single Word Analysis
+**1. Single word:**
 
 ```python
 from aksu import Atomizer
@@ -199,7 +190,17 @@ atomizer.to_canonical("evlerinden")
 # → ev +Noun +POSS.3PL +ABL
 ```
 
-### sklearn Pipeline
+**2. Sentence disambiguation:**
+
+```python
+from aksu import MorphoAnalyzer
+
+analyzer = MorphoAnalyzer(backends=["disambiguator"])
+results = analyzer.analyze_sentence("Çocuklar evlerinden çıktı")
+# → list of TokenAnalysis objects, one per word
+```
+
+**3. sklearn pipeline** (compat import; see [Migration](#migration-from-kokturk)):
 
 ```python
 from aksu.kokturk.sklearn_ext import MorphoTransformer
@@ -210,31 +211,31 @@ from sklearn.linear_model import LogisticRegression
 pipe = Pipeline([
     ("morph", MorphoTransformer(output="atomized")),
     ("tfidf", TfidfVectorizer()),
-    ("clf", LogisticRegression()),
+    ("clf",   LogisticRegression()),
 ])
 ```
 
-### Text Cleaning (arı-türk)
+**4. CLI:**
+
+```bash
+aksu analyze "evlerinden"
+# → evlerinden           → ev +Noun +POSS.3PL +ABL
+```
+
+**Text cleaning (arı-türk):**
 
 ```python
-from aksu.ariturk import TextCleaner
+from aksu import TextCleaner
 
 TextCleaner().clean("  TÜRKÇE   metİn  ")
 # → türkçe metin
 ```
 
 ```python
-from aksu.ariturk import turkish_lower
+from aksu import turkish_lower
 
 turkish_lower("I")
 # → ı
-```
-
-### CLI
-
-```bash
-aksu analyze "evlerinden"
-# → evlerinden           → ev +Noun +POSS.3PL +ABL
 ```
 
 ## Reproducing the Results
