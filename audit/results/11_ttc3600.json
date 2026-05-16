@@ -1,12 +1,16 @@
 {
   "claim_group": "A3 (0.947 F1), A4 (deltas table), A5 (atomization improves every classifier), E1 (3600 docs / 6 categories / 5-fold stratified CV), E4 (bootstrap + Holm-Bonferroni applied)",
-  "data_status": "UNAVAILABLE",
-  "reason": "TTC-3600 dataset not present in checkout (data/external/ empty). Network access blocked on login node (wget exit 8, HuggingFace Hub connection failed). Dataset requires manual download from Kaggle or GitHub.",
+  "data_status": "ACQUISITION_FAILED_DEFERRED",
+  "acquisition_attempts": {
+    "attempt_1_github": "https://raw.githubusercontent.com/savasy/TurkishTextClassification/master/TTC3600.csv → HTTP 404 (file not present; repo has TTC4900.csv, 7allV03.csv, eval.csv)",
+    "attempt_2_huggingface": "https://huggingface.co/api/datasets/savasy/ttc3600 → HTTP 401 (private/gated dataset; requires auth or approval)",
+    "attempt_3_alternative": "savasy/ttc4900 is public (HTTP 200, 4900 docs, 7 categories incl. 'dunya'). Not a drop-in replacement for TTC-3600 (different doc count, different category set). Cannot substantiate TTC-3600 claims with TTC-4900 data."
+  },
+  "verdict_A3_updated": "DEFERRED — TTC-3600 not publicly acquirable. Claims deferred to v1.1. Halt report: audit/halt_reports/2026-05-16-ttc3600-acquisition.md",
+  "verdict_A4_updated": "DEFERRED — same blocker.",
+  "verdict_A5_updated": "DEFERRED — same blocker.",
   "e4a_predetermined": "REFUTED — run_all_benchmarks.py does not import benchmark.significance. The README's claim 'All differences tested via paired bootstrap (10K iterations, Holm-Bonferroni corrected)' is FALSE at code level, regardless of dataset availability. See significance.py vs run_all_benchmarks.py import audit.",
   "e2_e3_code": "CONFIRMED — src/benchmark/significance.py contains paired_bootstrap_test(n_bootstrap=10000) and holm_bonferroni_correction; tests pass (pytest).",
-  "verdict_A3": "UNVERIFIABLE — TTC-3600 not downloadable on this host. Code exists at src/benchmark/run_all_benchmarks.py and src/classify/.",
-  "verdict_A4": "UNVERIFIABLE — same blocker.",
-  "verdict_A5": "UNVERIFIABLE — same blocker.",
   "verdict_E1": "UNVERIFIABLE for live run. Code inspection: run_all_benchmarks.py:154 uses StratifiedKFold(n_splits=5, shuffle=True, random_state=42) — CONFIRMED at code level.",
   "verdict_E4a": "REFUTED — see above.",
   "verdict_E4b": "UNVERIFIABLE — no fold predictions to bootstrap over.",
@@ -14,5 +18,6 @@
     "run_all_benchmarks_imports": "grep -n import src/benchmark/run_all_benchmarks.py — no import of significance module",
     "significance_tests": "937 passed, 0 failed in pytest for significance module",
     "expected_categories": ["ekonomi", "kültür-sanat", "sağlık", "siyaset", "spor", "teknoloji"]
-  }
+  },
+  "path_to_unblock": "Email acquisition from authors OR switch to TTC-4900 (different dataset, different claims). README template already has deferral note (docs/README.md.j2 line 77). See audit/halt_reports/2026-05-16-ttc3600-acquisition.md."
 }
