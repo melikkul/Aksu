@@ -105,3 +105,28 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Run consistency tests
         run: python -m pytest tests/test_version_license_consistency.py -v
+
+  clean-room-pip-install:
+    name: Clean-Room Install Verification
+    needs: test
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CPU torch then package
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,benchmark]"
+      - name: Verify public API importable
+        run: |
+          python -c "
+          from aksu import Atomizer, MorphoAnalyzer, TextCleaner, turkish_lower, __version__
+          print('aksu version:', __version__)
+          a = Atomizer(backend='zeyrek')
+          result = a.to_canonical('evlerinden')
+          print('evlerinden →', result)
+          assert result, 'to_canonical returned empty string'
+          "
+      - name: Verify CLI entry point
+        run: aksu --help
