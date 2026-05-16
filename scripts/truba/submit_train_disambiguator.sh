@@ -30,7 +30,9 @@ cd "$PROJECT"
 START=$(date +%s)
 
 /usr/bin/time -v python -m aksu.train.train_disambiguator \
-    --config configs/train/v6_full.yaml \
+    --train-data data/splits/train.jsonl \
+    --val-data   data/splits/val.jsonl \
+    --tag-vocab  models/vocabs/tag_vocab.json \
     --seed 42 \
     --output-dir models/v6_retimed \
     2>&1 | tee /arf/scratch/scolakoglu/logs/disamb_retime_${SLURM_JOB_ID}_stdout.txt

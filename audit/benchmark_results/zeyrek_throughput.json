@@ -1,12 +1,12 @@
 {
-  "tok_per_sec": 1209.1,
-  "p50_ms": 0.732,
-  "p95_ms": 2.112,
-  "p99_ms": 3.203,
-  "peak_rss_mb": 267.2,
+  "tok_per_sec": 1537.3,
+  "p50_ms": 0.589,
+  "p95_ms": 1.905,
+  "p99_ms": 2.828,
+  "peak_rss_mb": 277.1,
   "delta_rss_mb": 0.2,
-  "n_sentences": 200,
-  "n_tokens": 206,
+  "n_sentences": 1000,
+  "n_tokens": 1074,
   "host_cpu": "Intel(R) Xeon(R) Platinum 8480+",
   "host_kernel": "5.14.0-284.30.1.el9_2.x86_64"
 }
