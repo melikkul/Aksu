@@ -29,8 +29,8 @@
     "dualhead_tok_per_sec": "pending: requires dualhead_v2 checkpoint (submit_dualhead_train.sh)",
     "dualhead_em": "pending: scripts/eval_dualhead.py post-training",
     "dataset_v1_entries": "measured: wc -l data/gold/tr_gold_morph_v1.jsonl == 80537",
-    "dataset_v2_entries": "pending: 2.5M autolabel via submit_autolabel.sh (pipeline ready)",
-    "dataset_boundary_coverage": "pending: requires dataset_v2 build",
+    "dataset_v2_entries": "DEFERRED to v1.1: OSCAR pilot not staged (/arf/scratch/scolakoglu/oscar-tr-pilot.jsonl absent). v1.0 ships with v1 corpus only (80,537 entries). Pipeline ready: submit_autolabel.sh + tier_assignment + DualHead v2 retrain.",
+    "dataset_boundary_coverage": "DEFERRED to v1.1: requires v2 dataset build.",
     "classification_macro_f1_atomized_berturk": "pending: TTC-3600 dataset not yet acquired (Akin & Akin 2007 email-request); deferred to v1.1 per plan R8 resolution"
   }
 }
