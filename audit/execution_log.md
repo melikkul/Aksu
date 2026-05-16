@@ -24,5 +24,8 @@ One line per step: date · commit SHA (or "uncommitted") · workstream-step · s
 | 2026-05-16 | a75f841 | fix(tests): 5 failing tests resolved — .aksuignore (bert_cache), v6_retimed sidecar, diagram lowercase, gazetteer monkeypatch, README rebuild | ✅ |
 | 2026-05-16 | 2bfe481 | feat(data): offline preprocessing support (--local-jsonl flag, download_oscar_pilot.py); 32 new tests (test_em, test_preprocess_offline) | ✅ |
 | 2026-05-16 | ad5a1b1 | fix(lint): B905/TC003 in em.py; per-file TC ignore for tests/ in pyproject.toml | ✅ |
-| 2026-05-16 | pending | SLURM 5782172 (v6_eval/akya-cuda) — still pending Priority queue | ⏳ |
-| 2026-05-16 | pending | SLURM 5782174 (dualhead_train/akya-cuda) — still pending Priority queue | ⏳ |
+| 2026-05-16 | pending | SLURM 5782172 (v6_eval/akya-cuda) — CANCELED (moved to Orfoz CPU) | ❌→✅ |
+| 2026-05-16 | pending | SLURM 5782174 (dualhead_train/akya-cuda) — CANCELED (moved to Orfoz CPU) | ❌→✅ |
+| 2026-05-16 | pending | SLURM 5782202 (v6_eval_cpu/orfoz) submitted — expected 60-90 min | ⏳ |
+| 2026-05-16 | pending | SLURM 5782203 (dualhead_train_v1_cpu/orfoz) submitted — expected 4-8h | ⏳ |
+| 2026-05-16 | pending | SLURM 5782204 (inference_benchmark_cpu/orfoz) submitted — expected 1-3h | ⏳ |
