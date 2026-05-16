@@ -39,3 +39,8 @@ One line per step: date · commit SHA (or "uncommitted") · workstream-step · s
 | 2026-05-16 | pending | SLURM 5782486 (dualhead_train_cpu/orfoz) RUNNING — epoch ~14/50, improving; root_acc=0.50, tag_acc=0.80 | ⏳ |
 | 2026-05-16 | 73f78ec | fix(eval): complete rewrite of eval_one_seed() — correct DisambiguationDataset/pre_cache_bert/evaluate API + custom em_string loop | ✅ |
 | 2026-05-16 | pending | SLURM 5782508 (v6_eval_cpu/orfoz) resubmitted with fixed script — expected 60-90 min | ⏳ |
+| 2026-05-16 | pending | SLURM 5782486 (dualhead_train_cpu/orfoz) COMPLETED at 12:30 — 3748s (62.5 min) on orfoz360, exit 0 | ✅ |
+| 2026-05-16 | pending | SLURM 5782508 (v6_eval_cpu/orfoz) COMPLETED at 11:47 — per-seed mean 0.9815 (stable; canonical 0.9832 majority-vote kept) | ✅ |
+| 2026-05-16 | 0304ea2 | DualHead sidecars (best_model, final_model) written with forward provenance | ✅ |
+| 2026-05-16 | pending | SLURM 5782660 (dualhead_eval_cpu/orfoz) submitted — expected 30-60 min | ⏳ |
+| 2026-05-16 | pending | SLURM 5782661 (inference_benchmark_dualhead/orfoz) submitted — expected 30-60 min | ⏳ |
