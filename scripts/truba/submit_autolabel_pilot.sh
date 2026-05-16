@@ -27,18 +27,13 @@ mkdir -p "$PROJECT/data/intermediate"
 cd "$PROJECT"
 
 python -m aksu.data.build.autolabel \
-    --input  data/intermediate/unique_tokens.jsonl \
-    --output data/intermediate/autolabel_pilot.jsonl \
-    --shard-index 0 \
-    --shard-size 100000 \
-    --ensemble-ckpts \
-        models/v6/disambiguator/best_model.pt \
-        models/v6/disambiguator_s123/best_model.pt \
-        models/v6/disambiguator_s456/best_model.pt \
-        models/v6/disambiguator_s789/best_model.pt \
-        models/v6/disambiguator_s1337/best_model.pt \
-    --sentence-index data/intermediate/token_sentences.jsonl \
-    --sentences-db  data/intermediate/sentences.jsonl
+    --unique-tokens   data/intermediate/unique_tokens.jsonl \
+    --token-sentences data/intermediate/token_sentences.jsonl \
+    --sentences       data/intermediate/sentences.jsonl \
+    --output          data/intermediate/autolabel_pilot.jsonl \
+    --shard-start 0 \
+    --shard-end   100000 \
+    --seed 42
 
 echo "Pilot complete. Extrapolate yield with:"
 echo "python scripts/data/extrapolate_yield.py \\"
