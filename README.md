@@ -285,13 +285,24 @@ Hardware used:
 
 ## Limitations and Known Gaps
 
-- **`em_argmax` vs `em_string`**: The 98.3% headline is candidate-index argmax accuracy (within-system). Cross-system comparable `em_string` (canonical-string equality) is pending the SLURM eval run; it may differ. Both metrics will be reported in `models/v6/eval_results.json` after the run.
-- **Training time**: 14 min figure is from STATUS.md and has not been re-verified in v1.0.0. Authoritative re-timing pending (`submit_train_disambiguator.sh`).
-- **Throughput**: All inference throughput figures are pending authoritative Orfoz SLURM runs.
-- **Text classification**: TTC-3600 results deferred to v1.1 — dataset requires email-request acquisition from Akın & Akın (2007).
-- **Manual annotation pool**: Gold tier currently 2,496 entries (1-annotator). Cohen's κ requires a 200-entry double-annotated overlap which is planned for the v2 build.
-- **BOUN ShareAlike**: BOUN UD treebank is CC-BY-SA-4.0. Model weights trained on BOUN-derived data should be distributed under CC-BY-SA-4.0. Shards are tracked separately in `data/external/manifest.json`.
-- **OOV handling**: Zeyrek fails on neologisms (~4% of web-crawled Turkish). DualHead generator handles these but lags the disambiguator on the held-out set.
+- **em_argmax vs em_string**: In this repository's eval, em_string ≡ em_argmax (no two candidates produce the same canonical string). On other test sets with candidate-string collisions, em_string would be lower — the metrics are not interchangeable in general.
+- **Gold annotation size**: Gold tier is 2,496 entries (single annotator). Cohen's κ requires a 200-entry double-annotated overlap — planned for v1.1.
+- **OOV handling**: Zeyrek fails on ~4% of web-crawled Turkish (neologisms, foreign proper nouns). The DualHead fallback handles these but lags the disambiguator on the held-out set.
+- **Text classification deferred**: TTC-3600 benchmarks move to v1.1 — dataset requires email-request acquisition (Akın & Akın, 2007). Pipeline code is ready.
+- **Throughput variability**: CPU throughput on shared SLURM nodes (Orfoz) varies ±30–50%. All inference figures are order-of-magnitude guidance; see `audit/halt_reports/2026-05-16-berturk-measurement-drift.md`.
+- **BOUN ShareAlike propagation**: Model weights trained on BOUN-derived data should be distributed under CC-BY-SA-4.0. Shards are tracked in `data/external/manifest.json`.
+
+## Roadmap
+
+**v1.1 (planned):**
+- TR-Gold-Morph v2 (2.5M auto-labeled entries) — autolabel pipeline already in repository
+- TTC-3600 text classification benchmark — pending dataset acquisition
+- DualHead evaluation on held-out test set — training job completed; eval pending
+- Cohen's κ on 200-entry double-annotated gold subset
+
+**v2.0:**
+- Remove deprecated top-level `kokturk` / `ariturk` shim packages
+- PyPI stable release of `aksu` (pending Trusted Publishing pre-flight)
 
 ## Project Structure
 
