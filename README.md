@@ -161,16 +161,21 @@ The largest publicly annotated Turkish morphological resource:
 
 ## Installation
 
-```bash
-pip install aksu
-```
-
-From source:
+From source (recommended until PyPI publish — see [Roadmap](#roadmap)):
 
 ```bash
 git clone https://github.com/melikkul/Aksu.git
 cd Aksu
-pip install -e .
+pip install -e ".[dev,benchmark,train,data]"
+```
+
+Once published on PyPI:
+
+```bash
+pip install aksu                    # core only
+pip install "aksu[train]"           # + MLflow, Optuna, Transformers
+pip install "aksu[benchmark]"       # + SciPy (significance tests)
+pip install "aksu[data]"            # + HuggingFace Datasets, diskcache
 ```
 
 ## Usage
