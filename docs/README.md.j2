@@ -337,7 +337,8 @@ and the v2.0 sunset schedule.
   title={Aksu: Neural Morphological Atomization for Turkish: Gold Standard Corpus Construction and Hybrid Text Classification},
   author={Kul, Melik},
   year={2026},
-  school={Ostim Technical University},
+  school={Ostim Technical University},{% if metrics.zenodo_doi %}
+  doi={{ "{" }}{{ metrics.zenodo_doi }}{{ "}" }},{% endif %}
 }
 ```
 
