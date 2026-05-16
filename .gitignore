@@ -94,3 +94,8 @@ torchinductor_*/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# BERTurk embedding caches (large, reproducible from training scripts)
+models/*/bert_cache/
+models/*/*/bert_cache/
+models/v6_retimed/config.json
