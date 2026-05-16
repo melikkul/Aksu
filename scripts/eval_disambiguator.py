@@ -62,8 +62,13 @@ def eval_one_seed(
             "tag_vocab_size": state.get("tag_vocab_size", len(tag_vocab)),
             "bert_path": "models/berturk",
         }
+    # Checkpoint stores only the 21-key reranker head (frozen BERTurk excluded).
+    # BERTurkDisambiguator.__init__ loads BERTurk from bert_path; we then overlay
+    # the trained head weights with strict=False (BERTurk keys absent from ckpt).
     model = BERTurkDisambiguator(**model_cfg)
-    model.load_state_dict(state["model_state_dict"])
+    missing, unexpected = model.load_state_dict(state["model_state_dict"], strict=False)
+    if unexpected:
+        raise RuntimeError(f"Unexpected checkpoint keys: {unexpected[:3]}")
     model.to(device)
     model.eval()
 
