@@ -19,4 +19,4 @@ One line per step: date · commit SHA (or "uncommitted") · workstream-step · s
 | 2026-05-16 | adfa2ce | Fixed autolabel pilot CLI interface + dedup_tokens.py + submit_preprocess_aksu.sh | ✅ |
 | 2026-05-16 | pending | SLURM 5782172 (v6_eval/akya-cuda) — pending Priority queue | ⏳ |
 | 2026-05-16 | pending | SLURM 5782174 (dualhead_train/akya-cuda) — pending Priority queue | ⏳ |
-| 2026-05-16 | pending | SLURM 5782193 (disamb_retime/Orfoz) — resubmitted with transformers in venv | ⏳ |
+| 2026-05-16 | 92a0ecc | SLURM 5782193 (disamb_retime/Orfoz) completed → 16.71 min (prior 14 min claim 1.19× off; within normal variation) | ✅ |
