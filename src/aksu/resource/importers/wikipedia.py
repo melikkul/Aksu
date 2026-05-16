@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import logging
 import re
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +82,7 @@ def import_wikipedia(
         # datasets>=3.0 dropped script-based datasets; use wikimedia/wikipedia
         print("  Falling back to wikimedia/wikipedia ...")
         dataset = load_dataset(
-            "wikimedia/wikipedia", f"20231101.tr", split="train", streaming=True,
+            "wikimedia/wikipedia", "20231101.tr", split="train", streaming=True,
         )
 
     new_surfaces: set[str] = set()

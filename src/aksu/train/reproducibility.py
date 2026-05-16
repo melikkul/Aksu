@@ -5,7 +5,6 @@ Ensures identical results across runs given the same seed, hardware, and code.
 
 from __future__ import annotations
 
-import json
 import os
 import random
 import subprocess

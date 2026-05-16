@@ -10,7 +10,6 @@ Strategy:
 """
 from __future__ import annotations
 
-
 # Suffix allomorphs for each canonical tag (longest first for greedy match)
 TAG_SURFACE_MAP: dict[str, list[str]] = {
     "+PLU": ["lar", "ler"],

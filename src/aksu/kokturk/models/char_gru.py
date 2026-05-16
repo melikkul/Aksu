@@ -279,7 +279,7 @@ class MorphAtomizer(nn.Module):
     def greedy_decode(
         self,
         chars: torch.Tensor,
-        morphotactic_mask: "MorphotacticMask | None" = None,
+        morphotactic_mask: MorphotacticMask | None = None,
     ) -> torch.Tensor:
         """Greedy decoding without teacher forcing.
 

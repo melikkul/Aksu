@@ -12,7 +12,6 @@ Example::
 from __future__ import annotations
 
 from aksu._version import __version__
-
 from aksu.kokturk.core.analyzer import MorphoAnalyzer
 from aksu.kokturk.core.datatypes import Morpheme, MorphologicalAnalysis, TokenAnalyses
 from aksu.kokturk.core.grammar import GrammarChecker

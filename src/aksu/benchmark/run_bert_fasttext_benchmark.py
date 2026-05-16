@@ -31,7 +31,7 @@ import numpy as np
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import f1_score, accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.svm import LinearSVC
 
@@ -406,7 +406,7 @@ def main() -> None:
     # ─── Significance tests ────────────────────────────────────────────
     print()
     print("Paired bootstrap significance tests vs Atomized TF-IDF:")
-    from aksu.benchmark.significance import paired_bootstrap_test, holm_bonferroni_correction
+    from aksu.benchmark.significance import holm_bonferroni_correction, paired_bootstrap_test
 
     baseline_key = "atomized_tfidf_logreg"
     if baseline_key in results and "predictions" in results[baseline_key]:

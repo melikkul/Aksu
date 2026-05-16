@@ -26,11 +26,11 @@ def _try_import():
         from torch.utils.data import DataLoader
 
         from aksu.kokturk.models.disambiguator import BERTurkDisambiguator
+        from aksu.train.datasets import Vocab
         from aksu.train.disambiguation_dataset import (
             DisambiguationDataset,
             disambiguation_collate,
         )
-        from aksu.train.datasets import Vocab
         from aksu.train.train_disambiguator import (
             evaluate,
             pre_cache_bert_embeddings,
@@ -80,7 +80,8 @@ def eval_one_seed(
     bert_cache = pre_cache_bert(ds, bert_path)
 
     # Custom eval loop: collect per-sample preds to compute em_string
-    from aksu.benchmark.em import pred_index_to_strings, em_string as compute_em_string
+    from aksu.benchmark.em import em_string as compute_em_string
+    from aksu.benchmark.em import pred_index_to_strings
 
     pred_indices: list[int] = []
     gold_indices: list[int] = []

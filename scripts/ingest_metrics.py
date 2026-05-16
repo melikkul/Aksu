@@ -19,7 +19,6 @@ import argparse
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 VALID_RANGES: dict[str, tuple[float, float] | None] = {

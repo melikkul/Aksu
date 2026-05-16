@@ -4,6 +4,7 @@ Prior `silver-auto` / `silver-agreed` naming was ambiguous and inconsistent
 with the README's gold/silver/bronze claim. This module defines the canonical cuts.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 

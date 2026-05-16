@@ -1,9 +1,10 @@
 """Extract MorphEntry objects from CoNLL-U treebank files."""
 from __future__ import annotations
+
 import logging
 from pathlib import Path
 
-from aksu.resource.normalizer import normalize_surface, normalize_canonical
+from aksu.resource.normalizer import normalize_canonical, normalize_surface
 from aksu.resource.schema import MorphEntry
 from aksu.resource.tag_mappings import ud_feats_to_canonical
 

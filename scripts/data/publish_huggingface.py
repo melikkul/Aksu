@@ -97,7 +97,7 @@ def _build_dataset_card(repo_id: str) -> str:
     manifest_path = ROOT / "data/external/manifest.json"
     manifest_note = ""
     if manifest_path.exists():
-        manifest_note = f"\nSource corpus manifest: `data/external/manifest.json`\n"
+        manifest_note = "\nSource corpus manifest: `data/external/manifest.json`\n"
 
     return f"""---
 license: cc-by-4.0

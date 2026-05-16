@@ -45,6 +45,8 @@ models/berturk/
 models/word2vec/*.bin
 models/*/best_model.pt
 models/*/*/best_model.pt
+models/*/final_model.pt
+models/*/*/final_model.pt
 models/*/checkpoint_*.pt
 models/*/*/checkpoint_*.pt
 models/*/*.zip

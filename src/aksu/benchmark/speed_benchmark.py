@@ -9,7 +9,6 @@ the project numbers on a comparable axis.
 from __future__ import annotations
 
 import importlib.util
-import statistics
 import time
 from dataclasses import dataclass, field
 from pathlib import Path

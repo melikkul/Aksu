@@ -1,10 +1,11 @@
 """BOUN UD Treebank importer."""
 from __future__ import annotations
+
 import logging
 from pathlib import Path
 
 from aksu.resource.corpus_processor import parse_conllu_file
-from aksu.resource.schema import MorphDatabase, MorphEntry
+from aksu.resource.schema import MorphDatabase
 
 logger = logging.getLogger(__name__)
 

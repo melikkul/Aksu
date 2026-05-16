@@ -29,15 +29,11 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Iterable
 
 from aksu.kokturk.core.phonology import (
-    BACK_ROUNDED,
-    BACK_UNROUNDED,
-    FRONT_ROUNDED,
-    FRONT_UNROUNDED,
     is_front,
     is_rounded,
     last_vowel,

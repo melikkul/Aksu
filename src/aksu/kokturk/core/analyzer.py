@@ -349,8 +349,9 @@ class DisambiguatorBackend(AnalyzerBackend):
         bert_path: str = "models/berturk",
         vocab_dir: str = "models/vocabs",
     ) -> None:
-        import json
+
         import torch
+
         from aksu.kokturk.models.disambiguator import BERTurkDisambiguator
         from aksu.train.datasets import Vocab
 

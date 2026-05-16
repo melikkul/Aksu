@@ -11,7 +11,6 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-
 MODEL_ID = "dbmdz/bert-base-turkish-cased"
 DEFAULT_SAVE_PATH = "models/berturk"
 

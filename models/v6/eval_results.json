@@ -1,0 +1,39 @@
+{
+  "disambiguator": {
+    "em_argmax": 0.9820828667413214,
+    "em_string": 0.9820828667413214,
+    "n_tokens": 7144,
+    "checkpoint": "models/v6/disambiguator/best_model.pt"
+  },
+  "disambiguator_s123": {
+    "em_argmax": 0.9816629339305711,
+    "em_string": 0.9816629339305711,
+    "n_tokens": 7144,
+    "checkpoint": "models/v6/disambiguator_s123/best_model.pt"
+  },
+  "disambiguator_s456": {
+    "em_argmax": 0.9798432250839866,
+    "em_string": 0.9798432250839866,
+    "n_tokens": 7144,
+    "checkpoint": "models/v6/disambiguator_s456/best_model.pt"
+  },
+  "disambiguator_s789": {
+    "em_argmax": 0.9827827547592385,
+    "em_string": 0.9827827547592385,
+    "n_tokens": 7144,
+    "checkpoint": "models/v6/disambiguator_s789/best_model.pt"
+  },
+  "disambiguator_s1337": {
+    "em_argmax": 0.9809630459126539,
+    "em_string": 0.9809630459126539,
+    "n_tokens": 7144,
+    "checkpoint": "models/v6/disambiguator_s1337/best_model.pt"
+  },
+  "ensemble": {
+    "em_argmax_mean": 0.9814669652855543,
+    "em_string_mean": 0.9814669652855543,
+    "em_argmax_std": 0.0011224423402424004,
+    "em_string_std": 0.0011224423402424004,
+    "n_seeds": 5
+  }
+}

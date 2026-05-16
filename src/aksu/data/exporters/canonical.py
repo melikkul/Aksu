@@ -1,5 +1,6 @@
 """Export MorphEntry records to canonical TSV format."""
 from __future__ import annotations
+
 from collections.abc import Iterable
 from pathlib import Path
 

@@ -30,7 +30,7 @@ import torch
 PROJECT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT / "src"))
 
-from aksu.train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX  # noqa: E402
+from aksu.train.datasets import EOS_IDX, PAD_IDX, SOS_IDX, Vocab  # noqa: E402
 
 TEST_PATH = PROJECT / "data" / "splits" / "test.jsonl"
 CHAR_VOCAB_PATH = PROJECT / "models" / "vocabs" / "char_vocab.json"

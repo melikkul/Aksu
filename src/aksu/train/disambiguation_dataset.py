@@ -16,7 +16,7 @@ from pathlib import Path
 import torch
 from torch.utils.data import Dataset
 
-from aksu.train.datasets import PAD_IDX, UNK_IDX, Vocab
+from aksu.train.datasets import Vocab
 
 logger = logging.getLogger(__name__)
 

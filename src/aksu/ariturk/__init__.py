@@ -17,6 +17,7 @@ Example::
 from __future__ import annotations
 
 from aksu._version import __version__
+
 __all__ = [
     "TextCleaner",
     "QualityChecker",
@@ -27,12 +28,12 @@ __all__ = [
     "is_valid_turkish",
 ]
 
+from aksu.ariturk.boundaries import BoundaryExtractor
+from aksu.ariturk.cleaner import TextCleaner
 from aksu.ariturk.normalize import (
+    is_valid_turkish,
     normalize_surface,
     turkish_lower,
     turkish_upper,
-    is_valid_turkish,
 )
-from aksu.ariturk.cleaner import TextCleaner
 from aksu.ariturk.quality import QualityChecker
-from aksu.ariturk.boundaries import BoundaryExtractor

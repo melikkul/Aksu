@@ -1,5 +1,6 @@
 """Turkish text normalization for surface forms and canonical tags."""
 from __future__ import annotations
+
 import unicodedata
 
 # Turkish-specific Unicode normalization: homoglyphs that look similar but differ

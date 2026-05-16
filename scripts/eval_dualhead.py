@@ -212,7 +212,7 @@ def evaluate(
 
         for tok in token_list:
             surface: str = tok.get("surface", tok.get("word", ""))
-            gold_parse: str = tok.get("canonical", tok.get("parse", tok.get("tags", "")))
+            gold_parse: str = tok.get("canonical", tok.get("parse", tok.get("tags", tok.get("label", ""))))
             if not surface:
                 continue
 

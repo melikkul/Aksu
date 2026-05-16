@@ -13,9 +13,11 @@
   "reranker_p95_ms": 5.945,
   "reranker_p99_ms": 47.276,
   "reranker_peak_rss_mb": 1049.8,
-  "dualhead_tok_per_sec": null,
-  "dualhead_p50_ms": null,
-  "dualhead_p95_ms": null,
-  "dualhead_peak_rss_mb": null,
-  "dualhead_skipped_reason": "load failed: 'model_config'"
+  "dualhead_tok_per_sec": 23.2,
+  "dualhead_p50_ms": 30.848,
+  "dualhead_p95_ms": 107.706,
+  "dualhead_peak_rss_mb": 492.6,
+  "dualhead_skipped_reason": "load failed: 'model_config'",
+  "dualhead_p99_ms": 170.706,
+  "dualhead_checkpoint": "models/dualhead_v1_cpu/best_model.pt"
 }

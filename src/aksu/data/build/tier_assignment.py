@@ -13,7 +13,7 @@ import json
 import logging
 from pathlib import Path
 
-from aksu.data.tiers import Tier, assign_tier
+from aksu.data.tiers import assign_tier
 
 logger = logging.getLogger(__name__)
 

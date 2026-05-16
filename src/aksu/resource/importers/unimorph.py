@@ -1,5 +1,6 @@
 """UniMorph Turkish (tur) flat-file importer."""
 from __future__ import annotations
+
 import logging
 from pathlib import Path
 

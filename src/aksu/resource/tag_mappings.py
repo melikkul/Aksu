@@ -7,7 +7,6 @@ external annotation schemes to that canonical representation.
 """
 from __future__ import annotations
 
-
 # UD feature key=value → canonical tag (empty string means unmarked/skip)
 UD_TO_CANONICAL: dict[str, str] = {
     # Case (nominative is unmarked)

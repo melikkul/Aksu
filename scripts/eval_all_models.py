@@ -12,13 +12,12 @@ from __future__ import annotations
 import json
 import os
 import sys
-import traceback
 from collections import Counter
 from pathlib import Path
 
 import torch
 
-from aksu.train.datasets import Vocab, PAD_IDX, SOS_IDX, EOS_IDX
+from aksu.train.datasets import EOS_IDX, PAD_IDX, SOS_IDX, Vocab
 
 # ---------------------------------------------------------------------------
 PROJECT = Path(__file__).resolve().parent.parent

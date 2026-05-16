@@ -1,0 +1,7 @@
+{
+  "em_argmax": 0.066216,
+  "em_string": 0.066216,
+  "throughput_tok_per_sec": 10.8,
+  "n_tokens": 8140,
+  "checkpoint_path": "models/dualhead_v1_cpu/best_model.pt"
+}

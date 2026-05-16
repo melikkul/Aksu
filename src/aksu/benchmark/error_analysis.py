@@ -32,7 +32,6 @@ from pathlib import Path
 from aksu.benchmark.stratified_eval import _root
 from aksu.benchmark.tag_frequency import extract_tags
 
-
 # ---------------------------------------------------------------------------
 # Enums and data types
 # ---------------------------------------------------------------------------

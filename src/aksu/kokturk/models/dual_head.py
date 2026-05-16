@@ -410,7 +410,7 @@ class DualHeadAtomizer(nn.Module):
         chars: torch.Tensor,
         root_vocab_inv: list[str] | None = None,
         tag_vocab_inv: list[str] | None = None,
-        morphotactic_mask: "MorphotacticMask | None" = None,
+        morphotactic_mask: MorphotacticMask | None = None,
     ) -> list[str]:
         """Greedy decode; returns canonical label strings like ``"ev +PLU +ABL"``.
 

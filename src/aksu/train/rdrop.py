@@ -14,7 +14,7 @@ they do not leak gradient into the consistency objective.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import torch
 import torch.nn.functional as F

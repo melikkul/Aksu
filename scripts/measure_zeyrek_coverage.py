@@ -135,7 +135,7 @@ def main() -> None:
 
     # Print summary
     print(f"\n{'=' * 60}")
-    print(f"SUMMARY")
+    print("SUMMARY")
     print(f"{'=' * 60}")
     print(f"Total tokens:          {results['total_tokens']:,}")
     print(f"Gold in candidates:    {results['gold_in_candidates']:,} "
@@ -146,12 +146,12 @@ def main() -> None:
           f"({results['unambiguous_ratio']:.1%})")
     print(f"Ambiguous (K>1):       {results['ambiguous_count']:,}")
     print(f"Avg candidates/token:  {results['avg_candidates']:.1f}")
-    print(f"")
+    print("")
     print(f"EM floor (unambiguous): {results['em_floor']:.1%}")
-    print(f"  (These tokens have only 1 candidate = trivially correct)")
+    print("  (These tokens have only 1 candidate = trivially correct)")
 
     # Candidate count distribution
-    print(f"\nCandidate count distribution:")
+    print("\nCandidate count distribution:")
     for k, v in sorted(results["candidate_count_distribution"].items(),
                        key=lambda x: int(x[0])):
         pct = int(v) / results["total_tokens"] * 100
@@ -160,7 +160,7 @@ def main() -> None:
 
     # Side-by-side examples
     print(f"\n{'=' * 60}")
-    print(f"SIDE-BY-SIDE: Zeyrek candidates vs gold (10 ambiguous matches)")
+    print("SIDE-BY-SIDE: Zeyrek candidates vs gold (10 ambiguous matches)")
     print(f"{'=' * 60}")
     for i, ex in enumerate(results["side_by_side_examples"], 1):
         print(f"\n  [{i}] surface: '{ex['surface']}'")
@@ -172,12 +172,12 @@ def main() -> None:
 
     # Mismatch examples
     print(f"\n{'=' * 60}")
-    print(f"MISMATCHES: Gold NOT in Zeyrek candidates (first 10)")
+    print("MISMATCHES: Gold NOT in Zeyrek candidates (first 10)")
     print(f"{'=' * 60}")
     for i, ex in enumerate(results["mismatch_examples"], 1):
         print(f"\n  [{i}] surface: '{ex['surface']}'")
         print(f"      gold:    '{ex['gold']}'")
-        print(f"      Zeyrek candidates:")
+        print("      Zeyrek candidates:")
         for j, c in enumerate(ex["candidates"]):
             print(f"        [{j}] '{c}'")
 
@@ -185,15 +185,15 @@ def main() -> None:
     print(f"\n{'=' * 60}")
     if results["coverage"] >= 0.90:
         print(f"GO: Coverage {results['coverage']:.1%} >= 90% threshold")
-        print(f"Disambiguation approach is viable.")
+        print("Disambiguation approach is viable.")
     else:
         print(f"NO-GO: Coverage {results['coverage']:.1%} < 90% threshold")
-        print(f"Disambiguation approach needs tag mapping fixes first.")
+        print("Disambiguation approach needs tag mapping fixes first.")
 
     mismatch_rate = 1.0 - results["coverage"]
     if mismatch_rate > 0.05:
         print(f"\nWARNING: Format mismatch rate {mismatch_rate:.1%} > 5%")
-        print(f"Review ZEYREK_TO_CANONICAL mapping in constants.py")
+        print("Review ZEYREK_TO_CANONICAL mapping in constants.py")
     print(f"{'=' * 60}")
 
     # Save JSON report

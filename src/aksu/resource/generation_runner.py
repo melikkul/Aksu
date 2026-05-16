@@ -1,5 +1,6 @@
 """Generation 0 bootstrap runner for TR-Gold-Morph resource database."""
 from __future__ import annotations
+
 import logging
 import subprocess
 from pathlib import Path
@@ -55,12 +56,15 @@ class GenerationRunner:
     def run_generation_0(self) -> None:  # noqa: PLR0912
         """Execute Generation 0 bootstrap."""
         from aksu.resource.importers.boun import import_boun
-        from aksu.resource.importers.imst import import_imst, IMST_CLONE_URL, IMST_DEFAULT_DIR
-        from aksu.resource.importers.unimorph import import_unimorph, UNIMORPH_CLONE_URL, UNIMORPH_DEFAULT_DIR
+        from aksu.resource.importers.imst import IMST_CLONE_URL, IMST_DEFAULT_DIR, import_imst
+        from aksu.resource.importers.unimorph import (
+            UNIMORPH_CLONE_URL,
+            UNIMORPH_DEFAULT_DIR,
+            import_unimorph,
+        )
         from aksu.resource.importers.zeyrek_bulk import analyze_bulk
         from aksu.resource.quality_check import tier_from_entries
         from aksu.resource.schema import MorphDatabase, MorphEntry
-        from aksu.resource.normalizer import normalize_surface
 
         print("=== TR-Gold-Morph Generation 0 Bootstrap ===\n")
 
@@ -156,14 +160,14 @@ class GenerationRunner:
             stats = db.get_stats()
             total = stats["total"]
             print(f"\n{'='*50}")
-            print(f"Generation 0 complete!")
+            print("Generation 0 complete!")
             print(f"  Total entries    : {total:,}")
             print(f"  Unique surfaces  : {stats['unique_surfaces']:,}")
             print(f"  Unique lemmas    : {stats['unique_lemmas']:,}")
-            print(f"\n  By tier:")
+            print("\n  By tier:")
             for tier, count in sorted(stats["by_tier"].items()):
                 print(f"    {tier:8s}: {count:,}")
-            print(f"\n  By source:")
+            print("\n  By source:")
             for source, count in sorted(stats["by_source"].items()):
                 print(f"    {source:10s}: {count:,}")
             print(f"{'='*50}")
@@ -209,10 +213,10 @@ class GenerationRunner:
             print(f"  New entries inserted : {new_count:,}")
             print(f"  Total entries        : {total:,}")
             print(f"  Unique surfaces      : {stats_after['unique_surfaces']:,}")
-            print(f"\n  By tier:")
+            print("\n  By tier:")
             for tier, count in sorted(stats_after["by_tier"].items()):
                 print(f"    {tier:8s}: {count:,}")
-            print(f"\n  By source:")
+            print("\n  By source:")
             for source, count in sorted(stats_after["by_source"].items()):
                 print(f"    {source:10s}: {count:,}")
             print(f"{'='*50}")
@@ -261,10 +265,10 @@ class GenerationRunner:
             print(f"  New entries inserted : {new_count:,}")
             print(f"  Total entries        : {total:,}")
             print(f"  Unique surfaces      : {stats_after['unique_surfaces']:,}")
-            print(f"\n  By tier:")
+            print("\n  By tier:")
             for tier, count in sorted(stats_after["by_tier"].items()):
                 print(f"    {tier:8s}: {count:,}")
-            print(f"\n  By source:")
+            print("\n  By source:")
             for source, count in sorted(stats_after["by_source"].items()):
                 print(f"    {source:10s}: {count:,}")
             print(f"{'='*50}")

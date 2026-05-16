@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import math
 from collections import Counter
 from pathlib import Path
 
@@ -99,8 +98,8 @@ def main() -> None:
     report_path = output_path.with_suffix(".md")
     lines = [
         "# TR-Gold-Morph v2 Validation Report\n",
-        f"| Tier | Entries |",
-        f"|------|---------|",
+        "| Tier | Entries |",
+        "|------|---------|",
         f"| Gold   | {gold_n:,} |",
         f"| Silver | {silver_n:,} |",
         f"| Bronze | {bronze_n:,} |",

@@ -8,6 +8,7 @@ Resource tiers are determined by SOURCE TYPE, not confidence thresholds
   bronze = only 1 source, or multiple sources that disagree
 """
 from __future__ import annotations
+
 from collections import Counter
 
 from aksu.resource.schema import MorphEntry

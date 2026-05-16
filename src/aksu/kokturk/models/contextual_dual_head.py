@@ -31,10 +31,9 @@ import random
 import torch
 import torch.nn as nn
 
-from aksu.kokturk.models.char_gru import BahdanauAttention, CharGRUEncoder
+from aksu.kokturk.models.char_gru import CharGRUEncoder
 from aksu.kokturk.models.context_encoder import ContextEncoderBase
 from aksu.kokturk.models.dual_head import (
-    AttentionPooling,
     ConditionalTagDecoder,
     RootHead,
 )

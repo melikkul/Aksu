@@ -1,5 +1,6 @@
 """Export MorphEntry records to the tr_gold_morph CoNLL-U schema."""
 from __future__ import annotations
+
 from collections.abc import Iterable
 from pathlib import Path
 

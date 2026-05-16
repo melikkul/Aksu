@@ -1,5 +1,6 @@
 """Export MorphEntry records to UniMorph 3-column TSV format."""
 from __future__ import annotations
+
 from collections.abc import Iterable
 from pathlib import Path
 

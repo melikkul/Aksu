@@ -25,7 +25,6 @@ from collections import defaultdict
 from pathlib import Path
 
 import torch
-import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from aksu.train.datasets import Vocab

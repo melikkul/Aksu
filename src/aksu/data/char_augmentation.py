@@ -18,7 +18,7 @@ Three strategies are provided:
 from __future__ import annotations
 
 import random
-from typing import Sequence
+from collections.abc import Sequence
 
 __all__ = [
     "TURKISH_QWERTY_COORDS",
