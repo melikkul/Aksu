@@ -65,6 +65,10 @@ ignore = [
 [tool.ruff.lint.isort]
 known-first-party = ["aksu"]
 
+[tool.ruff.lint.per-file-ignores]
+# Tests use pytest and pathlib at runtime — TC002/TC003 are false-positives here.
+"tests/**" = ["TC002", "TC003"]
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
