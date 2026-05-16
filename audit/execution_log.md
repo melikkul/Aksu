@@ -13,5 +13,10 @@ One line per step: date · commit SHA (or "uncommitted") · workstream-step · s
 | 2026-05-16 | 000a4f4 | F-Steps 1-7: README template (docs/README.md.j2), build_readme.py, byte-identical CI gate | ✅ |
 | 2026-05-16 | c8ee807 | H-Steps 0-6: publish_huggingface.py, deposit_zenodo.py, run_acceptance_suite.sh, workflows | ✅ |
 | 2026-05-16 | f1f000e | Phase 0 (continuation): H-1/H-2/H-3/H-4 honesty cleanup; ingest_metrics.py; diagram fix | ✅ |
-| 2026-05-16 | pending | Phase 1 Stage 1: SLURM 5782171 (zeyrek_benchmark/Orfoz), 5782172 (v6_eval/akya-cuda), 5782173 (disamb_retime/Orfoz) submitted | ⏳ |
-| 2026-05-16 | pending | Phase 1 Stage 4: SLURM 5782174 (dualhead_train/akya-cuda) submitted | ⏳ |
+| 2026-05-16 | 9d7b051 | SLURM 5782171 (zeyrek_benchmark/Orfoz) completed → ingested 1537.3 tok/s on Xeon 8480+ | ✅ |
+| 2026-05-16 | pending | SLURM 5782173 (disamb_retime/Orfoz) failed — transformers not in venv; fixed pyproject.toml + resubmitted as 5782176 | ❌→⏳ |
+| 2026-05-16 | pending | SLURM 5782176 (disamb_retime/Orfoz) failed — transformers import error; installed transformers; resubmitted as 5782193 | ❌→⏳ |
+| 2026-05-16 | adfa2ce | Fixed autolabel pilot CLI interface + dedup_tokens.py + submit_preprocess_aksu.sh | ✅ |
+| 2026-05-16 | pending | SLURM 5782172 (v6_eval/akya-cuda) — pending Priority queue | ⏳ |
+| 2026-05-16 | pending | SLURM 5782174 (dualhead_train/akya-cuda) — pending Priority queue | ⏳ |
+| 2026-05-16 | pending | SLURM 5782193 (disamb_retime/Orfoz) — resubmitted with transformers in venv | ⏳ |
