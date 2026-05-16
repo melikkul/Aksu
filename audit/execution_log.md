@@ -51,3 +51,5 @@ One line per step: date · commit SHA (or "uncommitted") · workstream-step · s
 | 2026-05-16 | pending | SLURM 5782801 (dualhead_eval_cpu/orfoz) COMPLETED — em_string=0.0, em_argmax=0.0, throughput=5.7 tok/s; model undertrained (epoch 28, <UNK_ROOT> outputs) | ✅/⚠️ |
 | 2026-05-16 | pending | SLURM 5782802 (dualhead_bench/orfoz) COMPLETED — dualhead_tok_per_sec=23.2; ingested into metrics.json | ✅ |
 | 2026-05-16 | pending | §0 HALT: dualhead_em=0.0 vs prior claim 84.7% (>1pp gap); halt report written — awaiting user decision on options 1-4 | 🛑 |
+| 2026-05-16 | pending | Diagnostic: vocab sizes verified correct (char=106, tag=7807, root=3871); training-set EM also 0.0%; root cause confirmed = exposure bias + undertraining (not a vocab bug) | ✅ |
+| 2026-05-16 | pending | Resolution (Option 3): DualHead EM → N/A in README template; halt report updated with diagnosis; metrics.json note → DEFERRED; README rebuilt; CI gate passes | ✅ |

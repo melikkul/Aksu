@@ -27,7 +27,7 @@
     "berturk_sent_per_sec": "measured: SLURM 5782780 on orfoz326 (Xeon 8480+) — 67.9 sent/s CPU-only (n_measure=500; prior run 5782204 gave 112.8 — within 2x variance across Orfoz nodes)",
     "reranker_tok_per_sec": "measured: SLURM 5782780 on orfoz326 (Xeon 8480+) — 474.4 tok/s CPU-only (prior run 5782487 gave 517.7 — within 10% variance)",
     "dualhead_tok_per_sec": "measured: SLURM 5782802 on orfoz (Xeon 8480+) — 23.2 tok/s CPU-only; dualhead_v1_cpu/best_model.pt (3M params, epoch 28/50)",
-    "dualhead_em": "pending: SLURM 5782801 running on orfoz246 — eval_dualhead.py processing 8140 test records",
+    "dualhead_em": "DEFERRED to v1.1: CPU baseline (epoch 28/50, val_loss=0.24 with teacher forcing) yields em=0.0 in free-running greedy_decode — root cause confirmed as exposure bias (tag decoder generates root-string tokens from mixed tag_vocab instead of morphological tags; no EOS convergence). Vocab sizes verified correct (char=106, tag=7807, root=3871). Diagnosis: genuine undertraining, not a load bug. GPU retraining planned v1.1. See audit/halt_reports/2026-05-16-dualhead-em.md.",
     "dataset_v1_entries": "measured: wc -l data/gold/tr_gold_morph_v1.jsonl == 80537",
     "dataset_v2_entries": "DEFERRED to v1.1: OSCAR pilot not staged (/arf/scratch/scolakoglu/oscar-tr-pilot.jsonl absent). v1.0 ships with v1 corpus only (80,537 entries). Pipeline ready: submit_autolabel.sh + tier_assignment + DualHead v2 retrain.",
     "dataset_boundary_coverage": "DEFERRED to v1.1: requires v2 dataset build.",

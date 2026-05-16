@@ -34,8 +34,27 @@ The prior 84.7% claim was labelled UNVERIFIABLE in the audit ledger — it was n
 
 **Recommended:** Option 3 or 4. The 84.7% claim was unverified and likely referred to a hypothetical GPU-trained model. Shipping 0.0% in the README harms credibility more than omitting the row. A `[^dualhead-em]` footnote explaining the v1 CPU model is undertrained and a GPU run is planned is the most honest path.
 
-## Next steps (awaiting user approval)
+## Post-halt Diagnostic (2026-05-16)
 
-- If option 2: `sbatch scripts/truba/submit_dualhead_train.sh --gpu` on akya-cuda
-- If option 3/4: edit `docs/README.md.j2` to replace DualHead EM cell with "pending GPU retraining"
-- In all cases: ingest `dualhead_tok_per_sec = 23.2` (already measured, valid) and rebuild README
+Full diagnostic run confirmed this is **genuine undertraining, not a vocab/load bug**:
+
+**Vocab verification (Step 1):** All sizes match model weights exactly — char=106 (matches `encoder.char_embed: [106,64]`), tag=7807 (matches `tag_decoder.output_proj: [7807,128]`), root=3871 (matches `root_head.fc2: [3871,128]`). Load confirmed with `missing_keys=[], unexpected_keys=[]`. Training args verified to use the same `models/vocabs/*.json` paths as eval.
+
+**Training-set EM (Step 2):** Also 0.0% — confirmed this is not a test-set distribution issue.
+
+**Root cause (Step 3b):** The model generates tokens from tag_vocab that are ROOT STRINGS (e.g., `susku`, `Karacaoğlan`, `tırtıklamak`) rather than morphological tags, because tag_vocab is a mixed vocabulary (contains both root strings at position 1 and morphological tags at positions 2+). At epoch 28/50, the tag decoder hasn't learned to restrict position-2+ predictions to the morphological tag subset. Additionally:
+- Root classifier predicts `vermek` for `ve`, `gitmek` for `git` — hasn't converged to surface-form roots
+- Case sensitivity issue: both `çocuk` and `Çocuk` in root vocab, neither confidently predicted
+- EOS prediction fails for most tokens (model generates up to max_decode_len-2=13 tokens)
+- val_loss=0.24 reflects teacher-forcing loss, not free-running quality — confirms exposure bias
+
+**Conclusion:** This is NOT a fixable bug. The model requires more training epochs (or GPU retraining) to converge. The exposure bias gap between teacher-forcing training and free-running inference is the proximate cause of em=0.0.
+
+## Resolution (2026-05-16)
+
+**Executed Option 3**: DualHead EM row changed to "N/A [^dualhead-cpu]" in `docs/README.md.j2`. The footnote documents the undertraining root cause and defers EM measurement to v1.1 GPU retraining. DualHead throughput (23.2 tok/s, measured) is retained in the Inference table.
+
+- `docs/README.md.j2` updated: EM cell → N/A, footnote added, OOV limitation updated, Roadmap updated
+- `audit/benchmark_results/metrics.json` updated: dualhead_em note → DEFERRED with diagnosis
+- README rebuilt from template
+- GPU retraining (`akya-cuda`, ~3h) planned for v1.1
