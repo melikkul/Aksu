@@ -1,6 +1,8 @@
 """Executes every fenced Python block in README.md and, when a `# →` arrow is
 present, asserts the last expression equals the arrow's expected literal."""
+
 from __future__ import annotations
+
 import ast
 import re
 from pathlib import Path
@@ -46,7 +48,7 @@ def test_readme_python_blocks_execute_and_arrows_match():
             if (
                 "backend" in msg.lower()
                 or "No backends" in msg
-                or "state_dict" in msg       # BERTurk checkpoint weight mismatch in CI
+                or "state_dict" in msg  # BERTurk checkpoint weight mismatch in CI
                 or "model weights" in msg.lower()
             ):
                 continue  # requires model weights not present in CI

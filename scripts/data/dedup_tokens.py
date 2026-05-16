@@ -9,6 +9,7 @@ Usage:
         --input  data/intermediate/tokens.jsonl \\
         --output data/intermediate/unique_tokens.jsonl
 """
+
 from __future__ import annotations
 
 import argparse
@@ -41,11 +42,17 @@ def dedup(input_path: Path, output_path: Path) -> dict[str, int]:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as f:
         for token, count in freq.most_common():
-            f.write(json.dumps({
-                "token": token,
-                "frequency": count,
-                "source": source_map[token],
-            }, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    {
+                        "token": token,
+                        "frequency": count,
+                        "source": source_map[token],
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
 
     return {"unique_tokens": len(freq), "total_occurrences": sum(freq.values())}
 
@@ -53,7 +60,7 @@ def dedup(input_path: Path, output_path: Path) -> dict[str, int]:
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--input",  default="data/intermediate/tokens.jsonl")
+    ap.add_argument("--input", default="data/intermediate/tokens.jsonl")
     ap.add_argument("--output", default="data/intermediate/unique_tokens.jsonl")
     args = ap.parse_args()
 
