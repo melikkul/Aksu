@@ -25,7 +25,7 @@ def _load_jinja2():
 
 
 def render(template_path: Path, metrics_path: Path, output_path: Path) -> str:
-    Environment, FileSystemLoader, StrictUndefined = _load_jinja2()
+    Environment, FileSystemLoader, StrictUndefined = _load_jinja2()  # noqa: N806
 
     metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
 

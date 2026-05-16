@@ -91,8 +91,8 @@ def main() -> None:
                 print(f"  {written:,} sentences ...", flush=True)
 
     print(f"Done: {written:,} sentences written to {out_path}")
-    print(f"Next step:")
-    print(f"  sbatch scripts/truba/submit_preprocess_aksu.sh \\")
+    print("Next step:")
+    print("  sbatch scripts/truba/submit_preprocess_aksu.sh \\")
     print(f"    --local-jsonl {out_path}")
 
 

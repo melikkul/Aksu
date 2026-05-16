@@ -29,7 +29,6 @@ import time
 from pathlib import Path
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -384,7 +383,6 @@ def benchmark_dualhead(
         # Load vocabs from the same directory as the checkpoint
         vocab_dir = ckpt.parent.parent / "vocabs"
         char_vocab = Vocab.load(vocab_dir / "char_vocab.json")
-        tag_vocab = Vocab.load(vocab_dir / "tag_vocab.json")
     except Exception as exc:  # noqa: BLE001
         return {
             "dualhead_tok_per_sec": None,
