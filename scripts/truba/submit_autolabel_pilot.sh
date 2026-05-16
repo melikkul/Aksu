@@ -1,5 +1,6 @@
 #!/bin/bash
-# Pilot autolabel run: 100K tokens from shard 0 to estimate full-run yield.
+# Pilot autolabel run: 100K SENTENCES (~1.5M tokens) from the preprocessed corpus.
+# §H+ B: pilot unit is sentences, not tokens, for stronger yield extrapolation.
 # Must complete before submit_autolabel.sh (full array) is submitted.
 # Outputs data/intermediate/autolabel_pilot.jsonl for yield extrapolation.
 #
@@ -23,16 +24,19 @@ source "$PROJECT/.venv/bin/activate"
 
 mkdir -p /arf/scratch/scolakoglu/logs
 mkdir -p "$PROJECT/data/intermediate"
+mkdir -p "$PROJECT/data/tr_gold_morph/v2"
 
 cd "$PROJECT"
 
+# 100K sentences ≈ 1.5M tokens (§H+ B: stronger yield extrapolation signal).
+# --sentence-limit reads first 100K sentences, filters unique_tokens to those
+# that appear in at least one of those sentences.
 python -m aksu.data.build.autolabel \
     --unique-tokens   data/intermediate/unique_tokens.jsonl \
     --token-sentences data/intermediate/token_sentences.jsonl \
     --sentences       data/intermediate/sentences.jsonl \
     --output          data/intermediate/autolabel_pilot.jsonl \
-    --shard-start 0 \
-    --shard-end   100000 \
+    --sentence-limit  100000 \
     --seed 42
 
 echo "Pilot complete. Extrapolate yield with:"

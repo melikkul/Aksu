@@ -1,0 +1,57 @@
+# TR-Gold-Morph v2 tier assignment policy
+# Locked: approved 2026-05-16 (§H decision #10, §H+ A-C)
+#
+# 5-tier PRIMARY scheme + v1-compat 3-tier view (generated at export time).
+#
+# v1-compat mapping (data/tr_gold_morph/v2/v1_compat.jsonl):
+#   gold              → gold
+#   silver-confident  → silver-auto
+#   silver-auto       → silver-auto
+#   silver-marginal   → silver-agreed
+#   bronze            → excluded
+#   drop              → excluded
+
+tiers:
+  gold:
+    description: "Preserved from v1, manually verified (IAA ≥ 0.85)"
+    source: v1_gold
+
+  silver-confident:
+    description: "Multi-candidate, full ensemble agreement on best parse"
+    candidate_count: ">1"
+    seed_agreement: ">=5"   # all 5 BERTurk seeds vote same candidate
+    disambig_score: ">=0.85"
+
+  silver-auto:
+    description: "Zeyrek single-candidate (unambiguous)"
+    candidate_count: "==1"
+
+  silver-marginal:
+    description: "Multi-candidate, 4/5 seed agreement"
+    candidate_count: ">1"
+    seed_agreement: ">=4"
+    disambig_score: ">=0.70"
+
+  bronze:
+    description: "Multi-candidate, 3/5 seed agreement — research use only"
+    candidate_count: ">1"
+    seed_agreement: ">=3"
+    note: "research use only — not part of primary release"
+
+  drop:
+    description: "Everything else: <3/5 agreement, Zeyrek-OOV (→ oov.jsonl), drop_low_seeds"
+    rest: true
+
+# Ensemble wiring (§H+ A)
+ensemble:
+  seeds: [42, 123, 456, 789, 1337]
+  min_usable_seeds: 3    # <3 usable → drop tier
+  tie_break: "average_softmax"  # average softmax across all seeds, argmax among tied
+
+# Dedup strategy (§H+ C): sentence-level md5
+dedup: sentence_level_md5
+
+# OOV handling (§H #7)
+oov:
+  destination: "data/tr_gold_morph/v2/oov.jsonl"
+  exclude_from_main: true

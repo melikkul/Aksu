@@ -18,7 +18,8 @@ class TestLoadLocalJsonl:
         f = tmp_path / "corpus.jsonl"
         f.write_text("Merhaba dünya\nEvde oturuyorum\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["Merhaba dünya", "Evde oturuyorum"]
+        # Returns dicts with at least "text" key
+        assert [r["text"] for r in result] == ["Merhaba dünya", "Evde oturuyorum"]
 
     def test_json_objects_with_text_field(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
@@ -28,25 +29,27 @@ class TestLoadLocalJsonl:
         ]
         f.write_text("\n".join(lines) + "\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["Birinci cümle.", "İkinci cümle."]
+        assert [r["text"] for r in result] == ["Birinci cümle.", "İkinci cümle."]
+        # source field preserved when present
+        assert result[0].get("source") == "oscar-tr"
 
     def test_json_objects_with_sentence_field(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
         f.write_text(json.dumps({"sentence": "Cümle var."}) + "\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["Cümle var."]
+        assert result[0]["text"] == "Cümle var."
 
     def test_json_string_objects(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
         f.write_text('"düz metin"\n"başka metin"\n', encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["düz metin", "başka metin"]
+        assert [r["text"] for r in result] == ["düz metin", "başka metin"]
 
     def test_empty_lines_skipped(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
         f.write_text("cümle bir\n\n\ncümle iki\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["cümle bir", "cümle iki"]
+        assert [r["text"] for r in result] == ["cümle bir", "cümle iki"]
 
     def test_empty_text_field_skipped(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
@@ -56,13 +59,14 @@ class TestLoadLocalJsonl:
         ]
         f.write_text("\n".join(lines) + "\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["Geçerli cümle."]
+        assert len(result) == 1
+        assert result[0]["text"] == "Geçerli cümle."
 
     def test_custom_text_field(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
         f.write_text(json.dumps({"content": "özel alan"}) + "\n", encoding="utf-8")
         result = _load_local_jsonl(f, text_field="content")
-        assert result == ["özel alan"]
+        assert result[0]["text"] == "özel alan"
 
     def test_empty_file(self, tmp_path: Path) -> None:
         f = tmp_path / "corpus.jsonl"
@@ -78,7 +82,7 @@ class TestLoadLocalJsonl:
         ]
         f.write_text("\n".join(lines) + "\n", encoding="utf-8")
         result = _load_local_jsonl(f)
-        assert result == ["json satırı", "düz metin satırı"]
+        assert [r["text"] for r in result] == ["json satırı", "düz metin satırı"]
 
 
 class TestSources:

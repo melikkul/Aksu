@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/melikkul/aksu/data/schemas/v2_entry.schema.json",
+  "title": "TR-Gold-Morph v2 Entry",
+  "description": "Single token entry in the TR-Gold-Morph v2 corpus.",
+  "type": "object",
+  "required": ["token", "canonical", "tier", "source_id", "confidence"],
+  "properties": {
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Surface form of the token."
+    },
+    "canonical": {
+      "type": ["string", "null"],
+      "description": "Canonical morphological label: 'lemma +TAG +TAG ...'. Null for drop tier."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["gold", "silver-confident", "silver-auto", "silver-marginal", "bronze", "drop"],
+      "description": "Quality tier."
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Source corpus identifier (e.g., oscar-tr, wiki-tr)."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier for this entry's source (e.g., CC-BY-4.0)."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Autolabel confidence score (1.0 = unambiguous; ensemble softmax for multi-candidate)."
+    },
+    "seed_agreement": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Number of BERTurk ensemble seeds that voted for the winning candidate."
+    },
+    "disambig_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Average softmax score for the winning candidate across ensemble seeds."
+    },
+    "candidates": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "All Zeyrek candidate parses considered."
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of Zeyrek candidates before truncation."
+    },
+    "method": {
+      "type": "string",
+      "enum": ["unambiguous", "ensemble", "drop_low_seeds", "zeyrek_oov", "zeyrek_empty", "gold"],
+      "description": "Labeling method used."
+    },
+    "boundaries": {
+      "type": "string",
+      "description": "Morpheme boundary string e.g. 'ev|ler|i|nden'. Added by boundary annotator."
+    },
+    "context_sentence": {
+      "type": ["string", "null"],
+      "description": "Sentence used for BERTurk disambiguation context (truncated to 200 chars)."
+    },
+    "sentence_id": {
+      "type": "string",
+      "description": "SHA256-prefix sentence identifier (from preprocess step)."
+    },
+    "token_idx": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "0-based token position in sentence (v1-compat field)."
+    },
+    "label": {
+      "type": "string",
+      "description": "Alias for canonical (v1 schema compatibility)."
+    }
+  },
+  "additionalProperties": true
+}
