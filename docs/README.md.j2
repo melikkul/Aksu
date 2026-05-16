@@ -308,8 +308,16 @@ src/aksu/
 ├── train/            # Training scripts, curriculum, losses
 ├── benchmark/        # Evaluation suite
 ├── resource/         # TR-Gold-Morph pipeline
-└── classify/         # TTC-3600 experiments
+└── classify/         # TTC-3600 text classification experiments (deferred to v1.1)
 ```
+
+## Migration from `kokturk`
+
+Migrating from the legacy `kokturk` / `ariturk` packages? The shim packages
+re-export under `aksu.kokturk` and `aksu.ariturk` with `DeprecationWarning` —
+your existing imports keep working through all v1.x releases.
+See [docs/MIGRATION.md](docs/MIGRATION.md) for the full symbol rename table
+and the v2.0 sunset schedule.
 
 ## Citation
 
