@@ -256,7 +256,14 @@ def benchmark_reranker(
     try:
         device = torch.device("cpu")
         state = torch.load(str(ckpt), map_location=device, weights_only=True)
-        model_cfg = state["model_config"]
+        # Checkpoints may use either "model_config" dict or individual keys.
+        if "model_config" in state:
+            model_cfg = state["model_config"]
+        else:
+            model_cfg = {
+                "tag_vocab_size": state.get("tag_vocab_size", 512),
+                "bert_path": "models/berturk",
+            }
         model = BERTurkDisambiguator(**model_cfg)
         model.load_state_dict(state["model_state_dict"])
         model.eval()

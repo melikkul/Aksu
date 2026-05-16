@@ -95,7 +95,7 @@ def main() -> None:
     ap.add_argument("--batch-size", type=int, default=64)
     args = ap.parse_args()
 
-    torch, *_ = _try_import()[:1] + [None] * 7  # type: ignore[misc]
+    torch = _try_import()[0]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info("Device: %s", device)
 
