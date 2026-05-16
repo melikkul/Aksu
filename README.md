@@ -90,9 +90,9 @@ Numbers below are taken verbatim from their respective publications. They are no
 | Component | Speed | Memory | Notes |
 |-----------|-------|--------|-------|
 | Zeyrek candidate generation | ~1537.3 tok/s | ~267 MB | Intel(R) Xeon(R) Platinum 8480+ |
-| BERTurk embedding (cached) | 112.8 sent/s [^cpu-variability] | ~1.5 GB | |
-| Reranker scoring | 517.7 tok/s | ~10 MB | |
-| Dual-Head generation | pending SLURM run | ~20 MB | |
+| BERTurk embedding (cached) | 67.9 sent/s [^cpu-variability] | ~1.5 GB | |
+| Reranker scoring | 474.4 tok/s | ~10 MB | |
+| Dual-Head generation | 23.2 tok/s | ~20 MB | |
 
 [^zeyrek-hw]: Measured on Orfoz compute node (SLURM job 5782171). Prior login-node figure (1,209 tok/s) was a diagnostic value only.
 [^cpu-variability]: CPU throughput on shared SLURM nodes (Orfoz) varies ±30–50% depending on co-scheduled workloads and NUMA placement. Treat as order-of-magnitude guidance; see `audit/halt_reports/2026-05-16-berturk-measurement-drift.md`.
