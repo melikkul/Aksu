@@ -49,9 +49,68 @@ legal candidates; a frozen BERTurk encoder scores them in context; a 1M-paramete
 selects the best parse. Out-of-vocabulary words fall back to a Dual-Head sequence decoder.
 The result is a linguistically transparent representation every downstream task can exploit.
 
+## What's New in v1.1
+
+### GPU-accelerated NeuralBackend
+
+The `NeuralBackend` now auto-detects CUDA/MPS/XPU and applies bf16 mixed precision + `torch.compile`:
+
+```pycon
+>>> from aksu.kokturk.core.analyzer import NeuralBackend
+>>> # Auto-detects GPU; bf16 on CUDA, fp32 on CPU
+>>> backend = NeuralBackend("models/atomizer_v2/best_model.pt", "models/vocabs")
+>>> result = backend.analyze("evlerinden")
+>>> results = backend.predict_batch(["evlerinden", "kitaplarımdan"], batch_size=32)
+```
+
+Override device or precision explicitly:
+
+```pycon
+>>> backend = NeuralBackend(
+...     "models/atomizer_v2/best_model.pt",
+...     "models/vocabs",
+...     device="cuda",           # or "cpu", "mps", "xpu"
+...     precision="bf16",        # or "fp32", "auto"
+...     compile_mode="reduce-overhead",  # or None to disable
+...     batch_size=32,
+... )
+```
+
+### PDF Text Cleaning
+
+```python
+from aksu.ariturk import reconstruct_line_breaks, fix_pdf_artifacts
+
+# Re-join PDF line-break hyphens using Zemberek lexicon + vowel harmony
+text = reconstruct_line_breaks("kitap-\nlar ve Türk-\nçe")
+
+# Clean mojibake, zero-width chars, ligatures, repeated chars
+clean = fix_pdf_artifacts("Türk​çe ﬁrma \xe7oooook")
+```
+
+### New TextCleaner Methods
+
+```python
+from aksu.ariturk import TextCleaner
+
+cleaner = TextCleaner()
+text1 = cleaner.fix_line_breaks("kitap-\nlar")
+text2 = cleaner.fix_artifacts("Türk​\xe7e")
+```
+
+### Optional LM-scored hyphenation
+
+```bash
+pip install "aksu[full]"
+```
+
+---
+
 ## Features
 
 - **State-of-the-art disambiguation**: {{ "%.1f"|format(metrics.em_string_ensemble * 100) }}% Exact Match on the Aksu held-out test set (5-seed ensemble, em_string). Cross-system comparable.
+- **GPU-accelerated NeuralBackend** (v1.1): CUDA/MPS/XPU auto-detection, bf16 mixed precision, `torch.compile`, batched inference. CPU remains fully supported.
+- **PDF text cleaning** (v1.1): `reconstruct_line_breaks` + `fix_pdf_artifacts` — ftfy mojibake repair, Zemberek lexicon hyphenation decoder, vowel harmony validation.
 - **CPU-only training**: {{ metrics.training_wall_clock_min }} minutes on TRUBA Orfoz (Intel Xeon Platinum 8362). No GPU required for training or inference.
 - **Hybrid neural-symbolic**: Zeyrek symbolic candidates → frozen BERTurk 768-dim encoder → 1M-parameter reranker. Best-parse selection without fine-tuning the language model.
 - **OOV fallback**: Dual-Head Decoder generates tag sequences character-by-character for words Zeyrek cannot parse (~4% of web-crawled Turkish).

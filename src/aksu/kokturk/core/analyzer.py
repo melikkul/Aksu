@@ -254,30 +254,69 @@ def _parse_trmorph_output(
 class NeuralBackend(AnalyzerBackend):
     """Backend using trained GRU Seq2Seq morphological atomizer.
 
-    Loads a trained model checkpoint and runs greedy decode to
-    produce morphological analyses.
+    Loads a trained model checkpoint and runs greedy decode to produce
+    morphological analyses. Supports CUDA/MPS/XPU auto-detection, bf16
+    mixed precision, torch.compile, and batched inference.
 
     Args:
         model_path: Path to the saved model checkpoint (.pt file).
         vocab_dir: Directory containing char_vocab.json and tag_vocab.json.
+        device: Target device string (e.g. "cuda", "cpu"). None = auto-detect
+            via CUDA → MPS → XPU → CPU fallback chain.
+        precision: "auto" selects bf16 on CUDA/XPU, fp32 elsewhere.
+            Pass "bf16" or "fp32" to force a specific dtype.
+        compile_mode: torch.compile mode string. Pass None to disable.
+            Falls back to eager with a warning if compile fails (e.g. on MPS).
+        batch_size: Default batch size used by predict_batch().
     """
 
     def __init__(
         self,
         model_path: str = "models/atomizer_v2/best_model.pt",
         vocab_dir: str = "models/vocabs",
+        *,
+        device: str | None = None,
+        precision: str = "auto",
+        compile_mode: str | None = "reduce-overhead",
+        batch_size: int = 32,
     ) -> None:
-        # Load vocabs
+        import warnings
+
         import torch
 
         from aksu.kokturk.models.char_gru import MorphAtomizer
-        from aksu.train.datasets import Vocab
+        from aksu.train.datasets import EOS_IDX, PAD_IDX, Vocab
 
+        self._torch = torch
+
+        # Device auto-detection: CUDA → MPS → XPU → CPU
+        if device is not None:
+            self._device = torch.device(device)
+        elif torch.cuda.is_available():
+            self._device = torch.device("cuda")
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            self._device = torch.device("mps")
+        elif hasattr(torch, "xpu") and torch.xpu.is_available():
+            self._device = torch.device("xpu")
+        else:
+            self._device = torch.device("cpu")
+
+        # Mixed precision: bf16 on GPU, fp32 on CPU
+        if precision == "auto":
+            self._use_bf16 = self._device.type in {"cuda", "xpu"}
+        else:
+            self._use_bf16 = precision == "bf16"
+
+        self._batch_size = batch_size
+        self._EOS_IDX = EOS_IDX
+        self._PAD_IDX = PAD_IDX
+
+        # Load vocabs
         self._char_vocab = Vocab.load(Path(f"{vocab_dir}/char_vocab.json"))
         self._tag_vocab = Vocab.load(Path(f"{vocab_dir}/tag_vocab.json"))
 
-        # Load model
-        ckpt = torch.load(model_path, weights_only=True, map_location="cpu")
+        # Load model onto target device
+        ckpt = torch.load(model_path, weights_only=True, map_location=self._device)
         self._model = MorphAtomizer(
             char_vocab_size=ckpt["char_vocab_size"],
             tag_vocab_size=ckpt["tag_vocab_size"],
@@ -286,30 +325,50 @@ class NeuralBackend(AnalyzerBackend):
             num_layers=ckpt["num_layers"],
         )
         self._model.load_state_dict(ckpt["model_state_dict"])
+        self._model.to(self._device)
         self._model.eval()
-        self._torch = torch
 
-    def analyze(self, word: str) -> list[MorphologicalAnalysis]:
-        """Analyze a word using the trained neural model."""
-        from aksu.train.datasets import EOS_IDX, PAD_IDX
+        # Wrap with torch.compile to populate kernel cache and fuse ops.
+        # try/except because compile is known-unstable on MPS (PyTorch 2.x).
+        if compile_mode is not None:
+            try:
+                self._model = torch.compile(
+                    self._model, mode=compile_mode, dynamic=True
+                )
+            except Exception as exc:
+                warnings.warn(
+                    f"torch.compile failed ({exc!r}); falling back to eager mode.",
+                    UserWarning,
+                    stacklevel=2,
+                )
 
-        # Encode characters
+        # Warm-up: 3 dummy passes to pre-allocate GPU memory and fill compile cache
+        dummy = torch.zeros(1, 64, dtype=torch.long, device=self._device)
+        for _ in range(3):
+            with torch.inference_mode():
+                with torch.amp.autocast(
+                    device_type=self._device.type,
+                    dtype=torch.bfloat16,
+                    enabled=self._use_bf16,
+                ):
+                    self._model.greedy_decode(dummy)
+
+    def _encode(self, word: str) -> list[int]:
+        """Encode a word surface to a fixed-length padded char-id list."""
         char_ids = [self._char_vocab.encode(c) for c in word]
-        char_ids.append(EOS_IDX)
+        char_ids.append(self._EOS_IDX)
         char_ids = char_ids[:64]
-        char_ids += [PAD_IDX] * (64 - len(char_ids))
-        chars = self._torch.tensor([char_ids], dtype=self._torch.long)
+        char_ids += [self._PAD_IDX] * (64 - len(char_ids))
+        return char_ids
 
-        # Greedy decode
-        preds = self._model.greedy_decode(chars)
-
-        # Decode tag sequence
+    def _decode_preds(self, preds: Any, surface: str) -> MorphologicalAnalysis:
+        """Convert a (1, seq_len) prediction tensor into MorphologicalAnalysis."""
         tags: list[str] = []
-        root = word
+        root = surface
         for i, idx in enumerate(preds[0].tolist()):
-            if idx == EOS_IDX:
+            if idx == self._EOS_IDX:
                 break
-            if idx <= 3:  # PAD/SOS/EOS/UNK
+            if idx <= 3:  # PAD / SOS / EOS / UNK reserved indices
                 continue
             token = self._tag_vocab.decode(idx)
             if i == 0 and not token.startswith("+"):
@@ -321,14 +380,69 @@ class NeuralBackend(AnalyzerBackend):
             Morpheme(surface=t, canonical=t, category="inflectional")
             for t in tags
         )
-        return [MorphologicalAnalysis(
-            surface=word,
+        return MorphologicalAnalysis(
+            surface=surface,
             root=root,
             tags=tuple(tags),
             morphemes=morphemes,
             source="neural",
             score=1.0,
-        )]
+        )
+
+    def predict_batch(
+        self,
+        surfaces: list[str],
+        batch_size: int | None = None,
+    ) -> list[MorphologicalAnalysis]:
+        """Analyze a list of word surfaces in batched GPU-accelerated inference.
+
+        Sorts inputs by word length to minimise padding within each micro-batch,
+        then reorders results to match the original caller order.
+
+        Args:
+            surfaces: Word surface forms to analyse.
+            batch_size: Overrides the instance default for this call only.
+
+        Returns:
+            One MorphologicalAnalysis per input, in caller order.
+        """
+        torch = self._torch
+        if not surfaces:
+            return []
+
+        bs = batch_size if batch_size is not None else self._batch_size
+        # Sort by word length → tighter per-batch padding
+        order = sorted(range(len(surfaces)), key=lambda i: len(surfaces[i]))
+        sorted_surfaces = [surfaces[i] for i in order]
+        results: list[MorphologicalAnalysis | None] = [None] * len(surfaces)
+
+        pin = self._device.type in {"cuda", "xpu"}
+
+        for start in range(0, len(sorted_surfaces), bs):
+            chunk = sorted_surfaces[start : start + bs]
+            encoded = [self._encode(w) for w in chunk]
+            tensor = torch.tensor(encoded, dtype=torch.long)
+            if pin:
+                tensor = tensor.pin_memory()
+            tensor = tensor.to(self._device, non_blocking=pin)
+
+            with torch.inference_mode():
+                with torch.amp.autocast(
+                    device_type=self._device.type,
+                    dtype=torch.bfloat16,
+                    enabled=self._use_bf16,
+                ):
+                    batch_preds = self._model.greedy_decode(tensor)  # (B, out_len)
+
+            for j, surface in enumerate(chunk):
+                pred_row = batch_preds[j].unsqueeze(0)  # (1, out_len)
+                results[order[start + j]] = self._decode_preds(pred_row, surface)
+
+        return results  # type: ignore[return-value]
+
+    def analyze(self, word: str) -> list[MorphologicalAnalysis]:
+        """Analyze a single word. Delegates to predict_batch for backwards compat."""
+        return self.predict_batch([word])
 
 
 class DisambiguatorBackend(AnalyzerBackend):

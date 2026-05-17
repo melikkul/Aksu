@@ -26,13 +26,20 @@ __all__ = [
     "turkish_lower",
     "turkish_upper",
     "is_valid_turkish",
+    # v1.1 additions
+    "reconstruct_line_breaks",
+    "fix_pdf_artifacts",
+    "is_morphologically_valid",
 ]
 
 from aksu.ariturk.boundaries import BoundaryExtractor
 from aksu.ariturk.cleaner import TextCleaner
 from aksu.ariturk.normalize import (
+    fix_pdf_artifacts,
+    is_morphologically_valid,
     is_valid_turkish,
     normalize_surface,
+    reconstruct_line_breaks,
     turkish_lower,
     turkish_upper,
 )

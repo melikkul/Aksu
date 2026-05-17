@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "captured": "2026-05-17",
+    "backend": "zeyrek",
+    "aksu_version": "1.0.0a0",
+    "note": "Ground-truth outputs from Atomizer(backend='zeyrek'). Never hardcode Turkish morphological tag formats — always source assertions from this file."
+  },
+  "smoke": {
+    "evlerinden": "ev +Noun +POSS.3PL +ABL",
+    "kitaplarımdan": "Kitap +Noun +PLU +POSS.1SG +ABL",
+    "gelmiyordu": "gelmek +Verb +NEG +PROG +PAST"
+  },
+  "hyphenation_surfaces": {
+    "Türkçenin": "Türkçe +Noun +GEN",
+    "kitaplar": "Kitap +Noun +PLU",
+    "geliyorum": "gelmek +Verb +PROG",
+    "yapmaktır": "yapmak +Verb +INF +Noun +Verb +PRES +COP",
+    "Ankara": "Ankara +Noun",
+    "okulda": "okul +Noun +LOC",
+    "çocuklar": "çocuk +Noun +PLU",
+    "yardımcı": "yardımcı +Adj",
+    "yapılan": "yapılanmak +Verb +IMP",
+    "gelmekte": "gelmek +Verb +PROG",
+    "anladım": "anlamak +Verb +PAST",
+    "söyledi": "söylemek +Verb +PAST",
+    "bakıyor": "bakmak +Verb +PROG",
+    "kalacak": "kalmak +Verb +FUTPART +Adj",
+    "görmek": "görmek +Verb +INF +Noun",
+    "bilmek": "bilmek +Verb +INF +Noun",
+    "okumak": "okumak +Verb +INF +Noun",
+    "yazmak": "yazmak +Verb +INF +Noun",
+    "vermek": "vermek +Verb +INF +Noun",
+    "almak": "almak +Verb +INF +Noun",
+    "gitmek": "gitmek +Verb +INF +Noun",
+    "bulmak": "bulmak +Verb +INF +Noun",
+    "döndü": "dönmek +Verb +PAST",
+    "sunucu": "sunmak +Verb +AGT +Adj",
+    "takımı": "tak +Noun +POSS.1SG +ACC"
+  }
+}

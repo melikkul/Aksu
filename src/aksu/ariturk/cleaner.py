@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 from aksu.ariturk.normalize import (
+    fix_pdf_artifacts,
     is_valid_turkish,
     normalize_surface,
+    reconstruct_line_breaks,
     restore_diacritics,
     turkish_lower,
 )
@@ -52,3 +54,41 @@ class TextCleaner:
     def is_clean(self, text: str) -> bool:
         """Check if text is already clean Turkish."""
         return is_valid_turkish(text) and text == normalize_surface(text)
+
+    def fix_line_breaks(self, text: str, *, use_lm: bool = True) -> str:
+        """Re-join words split across PDF line breaks.
+
+        Delegates to :func:`aksu.ariturk.normalize.reconstruct_line_breaks`.
+
+        Args:
+            text: Raw PDF-extracted text with soft hyphens.
+            use_lm: Passed through to the underlying function (reserved for
+                kenlm integration in v1.1; currently a no-op without aksu[full]).
+
+        Returns:
+            Text with PDF line-break hyphens reconstructed.
+        """
+        return reconstruct_line_breaks(text, use_lm=use_lm)
+
+    def fix_artifacts(
+        self,
+        text: str,
+        *,
+        aggressive: bool = False,
+        repair_diacritics: bool = False,
+    ) -> str:
+        """Remove PDF extraction artifacts (mojibake, zero-width chars, etc.).
+
+        Delegates to :func:`aksu.ariturk.normalize.fix_pdf_artifacts`.
+
+        Args:
+            text: Raw PDF-extracted text.
+            aggressive: When True, also strip repeated header/footer lines.
+            repair_diacritics: When True, apply the 11-entry diacritic stub.
+
+        Returns:
+            Cleaned text. Idempotent for typical inputs.
+        """
+        return fix_pdf_artifacts(
+            text, aggressive=aggressive, repair_diacritics=repair_diacritics
+        )
