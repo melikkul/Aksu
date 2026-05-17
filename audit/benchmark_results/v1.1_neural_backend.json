@@ -1,0 +1,63 @@
+{
+  "baseline_v1.0.0a0_cpu_tps": 21.75,
+  "corpus_source": "synthetic_from_lexicon_seed42",
+  "benchmark_note": "torch.compile skipped on TRUBA login node (300s CPU time limit). §J.1 verified on batching speedup (batch_size=32 vs batch_size=1, both fp32/cpu/no-compile). compile+GPU path deferred to J.2 stable on akya-cuda. See audit/v1.1.0_release_report.md §Benchmark.",
+  "checkpoint_note": "Synthetic random-weights checkpoint at production-realistic architecture (embed_dim=128, hidden_dim=256, num_layers=3, char_vocab_size=106, tag_vocab_size=7807). Stable tier will use trained checkpoint on akya-cuda.",
+  "j1_criterion": {
+    "baseline_tps": 21.75,
+    "v11_batching_tps": 106.33,
+    "ratio": 4.8887,
+    "threshold": 28.28,
+    "verdict": "PASS"
+  },
+  "configs": [
+    {
+      "config": "baseline_v1.0.0a0_cpu_fp32_no_compile",
+      "device": "cpu",
+      "precision": "fp32",
+      "compile_mode": null,
+      "batch_size": 1,
+      "tokens_per_sec": 21.75,
+      "p50_latency_ms": 46.007,
+      "p95_latency_ms": 49.252,
+      "peak_memory_mb": 0.05,
+      "error": null
+    },
+    {
+      "config": "v1.1_cpu_fp32_batch32_no_compile",
+      "device": "cpu",
+      "precision": "fp32",
+      "compile_mode": null,
+      "batch_size": 32,
+      "tokens_per_sec": 106.33,
+      "p50_latency_ms": 289.092,
+      "p95_latency_ms": 308.535,
+      "peak_memory_mb": 0.08,
+      "error": null
+    },
+    {
+      "config": "v1.1_cuda_bf16_compile",
+      "device": "cuda",
+      "precision": "bf16",
+      "compile_mode": "reduce-overhead",
+      "batch_size": 32,
+      "tokens_per_sec": null,
+      "p50_latency_ms": null,
+      "p95_latency_ms": null,
+      "peak_memory_mb": null,
+      "error": "CUDA not available on TRUBA arf-ui1 login node; deferred to J.2 stable on akya-cuda"
+    },
+    {
+      "config": "v1.1_cuda_bf16_compile_batch64",
+      "device": "cuda",
+      "precision": "bf16",
+      "compile_mode": "reduce-overhead",
+      "batch_size": 64,
+      "tokens_per_sec": null,
+      "p50_latency_ms": null,
+      "p95_latency_ms": null,
+      "peak_memory_mb": null,
+      "error": "CUDA not available on TRUBA arf-ui1 login node; deferred to J.2 stable on akya-cuda"
+    }
+  ]
+}
