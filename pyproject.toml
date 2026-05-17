@@ -49,6 +49,9 @@ Documentation = "https://github.com/melikkul/Aksu#readme"
 where = ["src"]
 include = ["aksu*"]
 
+[tool.setuptools.package-data]
+"aksu.ariturk" = ["data/*.txt.gz", "data/*.txt"]
+
 [tool.setuptools.dynamic]
 version = {attr = "aksu._version.__version__"}
 
